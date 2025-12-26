@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:second_chat/IntroScreens/intro_screen2.dart';
-import '../CustomButton.dart';
-import '../colors.dart';
-import '../images.dart';
-import '../noise_painter.dart';
+
+import '../../../images.dart';
+
 
 class IntroScreen1 extends StatelessWidget {
   const IntroScreen1({super.key});

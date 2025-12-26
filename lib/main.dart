@@ -3,6 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:second_chat/IntroScreens/intro_screen2.dart';
+import 'package:second_chat/features/intro/get_started/intro_screen1.dart';
+import 'IntroScreens/intro_screen3.dart';
+import 'IntroScreens/intro_screen4.dart';
+import 'IntroScreens/intro_screen5.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/themes/app_typography.dart';
 import 'core/constants/constants.dart';
@@ -200,7 +205,7 @@ class MyApp extends StatelessWidget {
 
           // Initial Screen - Using direct widget reference (no string routes)
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home: const Test(),
+          home: const IntroScreen5(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,
