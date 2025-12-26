@@ -8,6 +8,7 @@ import 'package:second_chat/features/intro/get_started/intro_screen1.dart';
 import 'IntroScreens/intro_screen3.dart';
 import 'IntroScreens/intro_screen4.dart';
 import 'IntroScreens/intro_screen5.dart';
+import 'Streaks/StreamStreak1.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/themes/app_typography.dart';
 import 'core/constants/constants.dart';
@@ -205,7 +206,7 @@ class MyApp extends StatelessWidget {
 
           // Initial Screen - Using direct widget reference (no string routes)
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home: const IntroScreen5(),
+          home:  StreamStreaksScreen(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -40,7 +42,10 @@ class IntroScreen3 extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
+          Image.asset(
+            'assets/topbarshade.png',
+            fit: BoxFit.cover,
+          ),
           // Content
           SafeArea(
             child: Column(
@@ -82,12 +87,43 @@ class IntroScreen3 extends StatelessWidget {
                 SizedBox(height: 30.h),
 
                 // Title
-                Text(
-                  'How your Premium',
-                  style: sfProDisplay600(32.sp, Colors.white),
+                RichText(
                   textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'How your ',
+                        style: sfProDisplay600(34.sp, Colors.white),
+                      ),
+                      TextSpan(
+                        text: 'Premium',
+                        style: sfProDisplay600(
+                          34.sp,
+                          Colors.white, // base color won't matter, overridden by foreground
+                        ).copyWith(
+                          foreground: Paint()
+                            ..shader = LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFFF2B269),   // yellow-orange
+                                Color(0xFFF17A7A),   // fully opaque red
+                                Color(0xFFFFE6A7),   // light yellow
+                              ],
+                              stops: [0.2, 0.5, 0.8], // shift stops to give more space to red
+                              transform: GradientRotation(185.5 * 3.1415927 / 180),
+                            ).createShader(
+                              Rect.fromLTWH(0, 0, 200, 50),
+                            ),
+                        ),
+                      ),
+
+                    ],
+                  ),
                 ),
-                SizedBox(height: 4.h),
+
+
+
                 Text(
                   'free trial works',
                   style: sfProDisplay600(32.sp, Colors.white),
@@ -105,46 +141,112 @@ class IntroScreen3 extends StatelessWidget {
                 // Bottom Button
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
-                  child: Obx(() => GestureDetector(
-                    onTap: controller.isLoading.value ? null : controller.startTrial,
-                    child: Container(
-                      width: double.infinity,
-                      height: 56.h,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
+                  child: SizedBox(
+                    height: 90.h, // controls glow space (SAFE)
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        /// BACKGROUND GLOW
+                        _GlowOval(
+                          width: 1.sw - 60.w, // match button width
+                          height: 60.h,
+                          blur: 30,
                           colors: [
-                            Color(0xFFE8B87E),
-                            Color(0xFFD4A574),
+                            const Color(0xFFFFF59D).withOpacity(0.6),
+                            const Color(0xFFFFC107).withOpacity(0.35),
+                            Colors.transparent,
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(28.r),
-                      ),
-                      child: Center(
-                        child: controller.isLoading.value
-                            ? SizedBox(
-                          width: 24.w,
-                          height: 24.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+
+                        /// BUTTON
+                        Obx(
+                              () => GestureDetector(
+                            onTap: controller.isLoading.value
+                                ? null
+                                : controller.startTrial,
+                            child: Container(
+                              width: double.infinity,
+                              height: 56.h,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFFE8B87E),
+                                    Color(0xFFD4A574),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(28.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFFFC107).withOpacity(0.35),
+                                    blurRadius: 16,
+                                    spreadRadius: 9,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: controller.isLoading.value
+                                    ? SizedBox(
+                                  width: 24.w,
+                                  height: 24.w,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                                    : Text(
+                                  'Start My 14 Day Free Trial',
+                                  style: sfProText500(17.sp, Colors.white),
+                                ),
+                              ),
+                            ),
                           ),
-                        )
-                            : Text(
-                          'Start My 14 Day Free Trial',
-                          style: sfProText500(17.sp, Colors.white),
                         ),
-                      ),
+                      ],
                     ),
-                  )),
+                  ),
                 ),
+
 
                 SizedBox(height: 10.h),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _GlowOval extends StatelessWidget {
+  final double width;
+  final double height;
+  final List<Color> colors;
+  final double blur;
+
+  const _GlowOval({
+    required this.width,
+    required this.height,
+    required this.colors,
+    required this.blur,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageFiltered(
+      imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(height),
+          gradient: RadialGradient(
+            radius: 0.8,
+            colors: colors,
+          ),
+        ),
       ),
     );
   }

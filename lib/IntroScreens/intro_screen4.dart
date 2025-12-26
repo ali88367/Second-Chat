@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -47,7 +49,10 @@ class _IntroScreen4State extends State<IntroScreen4> {
               fit: BoxFit.cover,
             ),
           ),
-
+          Image.asset(
+            'assets/topbarshade.png',
+            fit: BoxFit.cover,
+          ),
           SafeArea(
             child: Column(
               children: [
@@ -78,37 +83,45 @@ class _IntroScreen4State extends State<IntroScreen4> {
                 SizedBox(height: 20.h),
 
                 // Title
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.w),
-                  child: Column(
+             Column(
                     children: [
-                      Text(
-                        'Unlock the full',
-                        style: sfProDisplay600(32.sp, Colors.white),
+                      RichText(
                         textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'experience with',
-                        style: sfProDisplay600(32.sp, Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 4.h),
-                      ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
-                          colors: const [
-                            Color(0xFFE8B87E),
-                            Color(0xFFE89B7E),
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Unlock the full experience with  ',
+                              style: sfProDisplay600(34.sp, Colors.white),
+                            ),
+                            TextSpan(
+                              text: 'Premium',
+                              style: sfProDisplay600(
+                                34.sp,
+                                Colors.white, // base color won't matter, overridden by foreground
+                              ).copyWith(
+                                foreground: Paint()
+                                  ..shader = LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xFFF2B269),   // yellow-orange
+                                      Color(0xFFF17A7A),   // fully opaque red
+                                      Color(0xFFFFE6A7),   // light yellow
+                                    ],
+                                    stops: [0.2, 0.5, 0.8], // shift stops to give more space to red
+                                    transform: GradientRotation(135.5 * 3.1415927 / 180),
+                                  ).createShader(
+                                    Rect.fromLTWH(0, 0, 200, 50),
+                                  ),
+                              ),
+                            ),
+
                           ],
-                        ).createShader(bounds),
-                        child: Text(
-                          'Premium',
-                          style: sfProDisplay600(32.sp, Colors.white),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
                   ),
-                ),
+
 
                 SizedBox(height: 30.h),
 
@@ -125,14 +138,14 @@ class _IntroScreen4State extends State<IntroScreen4> {
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Column(
                             children: [
-                              _buildHeaderRow(),
-                              SizedBox(height: 16.h),
+                              _buildGlassButton(),
+                              SizedBox(height: 24.h),
                               _buildFeatureRow('Multi-Platform Chat', true, false),
                               _buildFeatureRow('Multi-Stream Monitor', false, true),
                               _buildFeatureRow('Activity Feed', true, false),
                               _buildFeatureRow('Title/Category Manage', false, true),
                               _buildFeatureRow('Edge LED Notification', false, true),
-                              SizedBox(height: 100.h), // extra space for button
+                             // SizedBox(height: 100.h), // extra space for button
                             ],
                           ),
                         ),
@@ -197,67 +210,91 @@ class _IntroScreen4State extends State<IntroScreen4> {
     );
   }
 
-  Widget _buildHeaderRow() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.w),
-      height: 46.h,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(23.r),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Feature's",
-            style: sfProText500(15.sp, Colors.white),
-          ),
 
-          Text(
-            'Free',
-            style: sfProText500(15.sp, Colors.white),
+  Widget _buildGlassButton() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(37), // Rounded corners
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Glass blur effect
+        child: Container(
+        //  width: 250.w, // Fixed width
+          height: 58.h, // Fixed height
+          padding:  EdgeInsets.symmetric(horizontal: 16.w
           ),
-        ],
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(48, 48, 48, 0.5), // rgba(48,48,48,0.5)
+            borderRadius: BorderRadius.circular(37),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2), // subtle border for glass effect
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Feature's",
+                style: sfProText600(17.sp, Colors.white),
+              ),
+              Text(
+                'Free',
+                style: sfProText600(17.sp, Colors.white),
+              ),
+
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildFeatureRow(String feature, bool isFree, bool showInfo) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Text(
-              feature,
-              style: sfProText400(15.sp, Colors.white),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Container(
-                width: 28.w,
-                height: 28.w,
-                decoration: BoxDecoration(
-                  color: isFree
-                      ? Colors.white.withOpacity(0.2)
-                      : Colors.white.withOpacity(0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isFree ? Icons.check : Icons.close,
-                  color: isFree ? Colors.white : Colors.white.withOpacity(0.5),
-                  size: 16.sp,
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: 17.w),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  feature,
+                  style: sfProText400(17.sp, Colors.white),
                 ),
               ),
-            ),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      color: isFree
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isFree ? Icons.check : Icons.close,
+                      color: isFree ? Colors.white : Colors.white.withOpacity(0.5),
+                      size: 16.sp,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 12.h), // Vertical spacing
+        Divider(
+          color: Colors.grey.withOpacity(0.3), // Grey divider
+          thickness: 1,
+          indent: 17.w, // Align with left margin
+          endIndent: 17.w, // Optional: align right
+        ),
+        SizedBox(height: 12.h), // Space after divider
+      ],
     );
   }
 
