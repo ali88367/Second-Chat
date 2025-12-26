@@ -55,7 +55,6 @@ class StreamStreaksScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -63,9 +62,9 @@ class StreamStreaksScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     children: [
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 20.h),
                       _buildFireIcon(),
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 12.h),
                       _buildTitle(),
                       SizedBox(height: 12.h),
                       _buildSubtitle(),
@@ -87,88 +86,50 @@ class StreamStreaksScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              // Navigation action - currently nothing as per requirement
-            },
-            child: Container(
-              width: 40.w,
-              height: 40.w,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C1C1E),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 24.sp,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                'Stream Streaks',
-                style: sfProDisplay600(20.sp, Colors.white),
-              ),
-            ),
-          ),
-          SizedBox(width: 40.w), // Balance the layout
-        ],
-      ),
-    );
-  }
 
   Widget _buildFireIcon() {
     return Container(
-      width: 280.w,
-      height: 280.w,
+      width: 180.w,
+      height: 180.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFDB747).withOpacity(0.3),
-            blurRadius: 100.r,
-            spreadRadius: 30.r,
+            color: const Color(0xFFFFD966).withOpacity(0.5),
+            blurRadius: 60.r,
+            spreadRadius: 15.r,
           ),
           BoxShadow(
-            color: const Color(0xFFE6B8F5).withOpacity(0.2),
-            blurRadius: 80.r,
-            spreadRadius: 20.r,
+            color: const Color(0xFFFFB84D).withOpacity(0.3),
+            blurRadius: 40.r,
+            spreadRadius: 10.r,
           ),
         ],
       ),
       child: Center(
         child: Image.asset(
           'assets/fireicon.png',
-          width: 140.w,
-          height: 140.w,
+          width: 340.w,
+          height: 340.w,
           errorBuilder: (context, error, stackTrace) {
             // Fallback gradient fire icon
             return Container(
-              width: 140.w,
-              height: 140.w,
+              width: 160.w,
+              height: 160.w,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFFDB747),
-                    const Color(0xFFE6B8F5),
+                    const Color(0xFFFFD966),
+                    const Color(0xFFFFB84D),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(70.r),
+                borderRadius: BorderRadius.circular(80.r),
               ),
               child: Icon(
                 Icons.local_fire_department,
-                size: 80.sp,
+                size: 100.sp,
                 color: Colors.white,
               ),
             );
