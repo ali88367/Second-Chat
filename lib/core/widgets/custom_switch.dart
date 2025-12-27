@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:second_chat/core/themes/textstyles.dart';
 import '../constants/app_colors/app_colors.dart';
-import '../themes/app_typography.dart';
 
 /// CustomSwitch
 /// 
@@ -30,7 +30,7 @@ class CustomSwitch extends StatelessWidget {
   /// Active color when switch is on (default: light brown/golden)
   final Color? activeColor;
 
-  /// Inactive color when switch is off (default: AppColors.greyScale300)
+  /// Inactive color when switch is off (default: greyScale300)
   final Color? inactiveColor;
 
   /// Color of the switch thumb (default: Colors.white)
@@ -63,16 +63,16 @@ class CustomSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     // Colors matching the image: light brown/golden when active, grey when inactive
     final Color finalActiveColor = activeColor ?? const Color(0xFFD4A574); // Light brown/golden
-    final Color finalInactiveColor = inactiveColor ?? AppColors.greyScale300;
+    final Color finalInactiveColor = inactiveColor ?? greyScale300;
     final Color finalThumbColor = thumbColor ?? Colors.white;
     final double finalSpacing = spacing ?? 12.w;
 
     // Dimensions: wider and shorter for lengthy look
-    final double switchWidth = 72.w; // Increased width for lengthy look
-    final double switchHeight = 24.h; // Reduced height
+    final double switchWidth = 64.w; // Increased width for lengthy look
+    final double switchHeight = 28.h; // Reduced height
     final double thumbPadding = 2.h;
     final double thumbHeight = switchHeight - (thumbPadding * 2);
-    final double thumbWidth = thumbHeight * 1.8; // Rectangle thumb (longer than tall)
+    final double thumbWidth = 39.w; // Rectangle thumb (longer than tall)
 
     // Custom switch theme
     final SwitchThemeData switchTheme = SwitchThemeData(
@@ -80,7 +80,7 @@ class CustomSwitch extends StatelessWidget {
       trackColor: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (states.contains(WidgetState.disabled)) {
-            return AppColors.greyScale300.withOpacity(0.5);
+            return greyScale300.withOpacity(0.5);
           }
           if (states.contains(WidgetState.selected)) {
             return finalActiveColor;
@@ -123,7 +123,7 @@ class CustomSwitch extends StatelessWidget {
               width: switchWidth,
               height: switchHeight,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(switchHeight / 2),
+                borderRadius: BorderRadius.circular(100.r),
                 color: value ? finalActiveColor : finalInactiveColor,
               ),
             ),
@@ -138,7 +138,7 @@ class CustomSwitch extends StatelessWidget {
                 height: thumbHeight,
                 decoration: BoxDecoration(
                   color: finalThumbColor,
-                  borderRadius: BorderRadius.circular(switchHeight / 2), // Rounded borders matching track
+                  borderRadius: BorderRadius.circular(switchHeight / 1.5), // Rounded borders matching track
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.15),
@@ -183,20 +183,22 @@ class CustomSwitch extends StatelessWidget {
             if (label != null)
               Text(
                 label!,
-                style: AppTypography.labelLarge.copyWith(
-                  color: isDisabled
-                      ? AppColors.textDisabled
-                      : AppColors.textPrimary,
+                style: sfProDisplay500(
+                  14.sp,
+                  isDisabled
+                      ? textDisabled
+                      : textPrimary,
                 ),
               ),
             if (description != null) ...[
               SizedBox(height: 4.h),
               Text(
                 description!,
-                style: AppTypography.caption.copyWith(
-                  color: isDisabled
-                      ? AppColors.textDisabled
-                      : AppColors.textSecondary,
+                style: sfProDisplay500(
+                  15.sp,
+                  isDisabled
+                      ? textDisabled
+                      : textSecondary,
                 ),
               ),
             ],

@@ -51,7 +51,7 @@ class CustomBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final IconData finalIcon = icon ?? Icons.arrow_back;
-    final Color finalColor = color ?? AppColors.textPrimary;
+    final Color finalColor = color ?? textPrimary;
     final double finalIconSize = iconSize ?? 24.sp;
     final VoidCallback finalOnPressed = onPressed ?? () => Get.back();
 
@@ -69,7 +69,7 @@ class CustomBackButton extends StatelessWidget {
     if (showBackground) {
       button = Container(
         decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.greyScale100,
+          color: backgroundColor ?? greyScale100,
           shape: BoxShape.circle,
         ),
         child: button,

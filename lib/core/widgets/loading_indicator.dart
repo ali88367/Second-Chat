@@ -53,7 +53,7 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color finalColor = color ?? AppColors.primary;
+    final Color finalColor = color ?? primary;
     final double finalSize = size ?? 40.w;
     final double finalStrokeWidth = strokeWidth ?? 4;
 
@@ -74,7 +74,7 @@ class LoadingIndicator extends StatelessWidget {
         indicator = LinearProgressIndicator(
           minHeight: finalStrokeWidth,
           valueColor: AlwaysStoppedAnimation<Color>(finalColor),
-          backgroundColor: AppColors.greyScale200,
+          backgroundColor: greyScale200,
         );
         break;
     }
@@ -89,7 +89,7 @@ class LoadingIndicator extends StatelessWidget {
           Text(
             message!,
             style: TextStyle(
-              color: AppColors.textSecondary,
+              color: textSecondary,
               fontSize: 14.sp,
             ),
           ),
@@ -105,17 +105,17 @@ class LoadingIndicator extends StatelessWidget {
     // Full-screen mode
     return Container(
       color: showOverlay
-          ? (backgroundColor ?? AppColors.overlayLight)
+          ? (backgroundColor ?? overlayLight)
           : (backgroundColor ?? Colors.transparent),
       child: Center(
         child: Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: AppColors.background,
+            color: background,
             borderRadius: BorderRadius.circular(12.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.greyScale900.withOpacity(0.1),
+                color: greyScale900.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),

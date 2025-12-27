@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:second_chat/core/themes/textstyles.dart';
 import '../constants/app_colors/app_colors.dart';
-import '../themes/app_typography.dart';
 import 'custom_back_button.dart';
 
 /// CustomAppBar
@@ -74,9 +74,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColors.background,
+      backgroundColor: backgroundColor ?? background,
       elevation: elevation ?? 0,
-      shadowColor: AppColors.greyScale200,
+      shadowColor: greyScale200,
       automaticallyImplyLeading: automaticallyImplyLeading,
       centerTitle: centerTitle,
       leading: leading ??
@@ -92,8 +92,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           (title != null
               ? Text(
                   title!,
-                  style: AppTypography.h6.copyWith(
-                    color: AppColors.textPrimary,
+                  style: sfProDisplay600(
+                    14.sp,
+                    textPrimary,
                   ),
                 )
               : null),

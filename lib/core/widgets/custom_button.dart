@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:second_chat/core/themes/textstyles.dart';
 import '../constants/app_colors/app_colors.dart';
-import '../themes/app_typography.dart';
 
 /// CustomButton
-/// 
+///
 /// A premium, highly customizable button widget built with Container.
 /// All properties are optional except for the text parameter.
-/// 
+///
 /// Features:
 /// - Fully customizable styling (colors, radius, size, shadow)
+/// - Linear gradient background support (takes priority over backgroundColor)
 /// - Loading state with spinner
 /// - Icon support (prefix and suffix)
 /// - Full-width by default (can be customized)
@@ -24,8 +25,11 @@ class CustomButton extends StatelessWidget {
   /// Callback function when button is tapped
   final VoidCallback? onPressed;
 
-  /// Background color of the button
+  /// Solid background color of the button (used only if gradient is null)
   final Color? backgroundColor;
+
+  /// Linear gradient background (takes priority over backgroundColor)
+  final LinearGradient? gradient;
 
   /// Foreground/text color of the button
   final Color? foregroundColor;
@@ -74,6 +78,7 @@ class CustomButton extends StatelessWidget {
     required this.text,
     this.onPressed,
     this.backgroundColor,
+    this.gradient,
     this.foregroundColor,
     this.borderRadius,
     this.height,
@@ -95,52 +100,54 @@ class CustomButton extends StatelessWidget {
     final bool isEnabled = !isDisabled && !isLoading && onPressed != null;
 
     // Default values
-    final Color finalBackgroundColor =
-        backgroundColor ?? AppColors.primary;
     final Color finalForegroundColor =
-        foregroundColor ?? AppColors.textInverse;
-    final double finalHeight = height ?? 56.h;
-    // Make border radius completely round (pill-shaped) by default
-    // Use half of height for fully rounded corners
+        foregroundColor ?? textInverse;
+    final double finalHeight = height ?? 50.h;
     final double finalBorderRadius = borderRadius ?? (finalHeight / 2);
-    final double? finalWidth = width; // null = full width
-    final double finalHorizontalPadding = horizontalPadding ?? 24.w;
-    final double finalVerticalPadding = verticalPadding ?? 16.h;
+    final double? finalWidth = width;
+    final double finalHorizontalPadding = horizontalPadding ?? 0.w;
+    final double finalVerticalPadding = verticalPadding ?? 0.h;
     final List<BoxShadow> finalBoxShadow = boxShadow ??
         [
           BoxShadow(
-            color: AppColors.greyScale900.withOpacity(0.1),
+            color: greyScale900.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
         ];
 
-    // Apply disabled state
-    final Color effectiveBackgroundColor = isEnabled
-        ? finalBackgroundColor
-        : AppColors.greyScale300;
+    // Determine background decoration
+    final BoxDecoration decoration = BoxDecoration(
+      gradient: isEnabled ? gradient : null, // Gradient only when enabled
+      color: isEnabled
+          ? (gradient != null
+          ? null // No solid color if gradient is used
+          : backgroundColor ?? primary)
+          : greyScale300, // Disabled state color
+      borderRadius: BorderRadius.circular(finalBorderRadius),
+      border: borderColor != null
+          ? Border.all(
+        color: isEnabled ? borderColor! : greyScale300,
+        width: borderWidth ?? 1.5.w,
+      )
+          : null,
+      boxShadow: isEnabled ? finalBoxShadow : null,
+    );
+
+    // Apply disabled foreground color
     final Color effectiveForegroundColor = isEnabled
         ? finalForegroundColor
-        : AppColors.textDisabled;
+        : textDisabled;
 
     // Determine text style
     final TextStyle finalTextStyle = textStyle ??
-        AppTypography.buttonMedium.copyWith(color: effectiveForegroundColor);
+        sfProDisplay500(14.sp, effectiveForegroundColor);
 
     Widget buttonContent = Container(
-      width: finalWidth ?? double.infinity, // Full width if null
+      width: finalWidth ?? double.infinity,
       height: finalHeight,
-      decoration: BoxDecoration(
-        color: effectiveBackgroundColor,
-        borderRadius: BorderRadius.circular(finalBorderRadius),
-        border: borderColor != null
-            ? Border.all(
-                color: isEnabled ? borderColor! : AppColors.greyScale300,
-                width: borderWidth ?? 1.5.w,
-              )
-            : null,
-        boxShadow: isEnabled ? finalBoxShadow : null,
-      ),
+      decoration: decoration,
+      alignment: Alignment.center,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -153,48 +160,48 @@ class CustomButton extends StatelessWidget {
             ),
             child: isLoading
                 ? Center(
-                    child: SizedBox(
-                      width: 24.w,
-                      height: 24.h,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          effectiveForegroundColor,
-                        ),
-                      ),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (prefixIcon != null) ...[
-                        Icon(
-                          prefixIcon,
-                          size: 20.sp,
-                          color: effectiveForegroundColor,
-                        ),
-                        SizedBox(width: 8.w),
-                      ],
-                      Flexible(
-                        child: Text(
-                          text,
-                          style: finalTextStyle,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                      if (suffixIcon != null) ...[
-                        SizedBox(width: 8.w),
-                        Icon(
-                          suffixIcon,
-                          size: 20.sp,
-                          color: effectiveForegroundColor,
-                        ),
-                      ],
-                    ],
+              child: SizedBox(
+                width: 24.w,
+                height: 24.h,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    effectiveForegroundColor,
                   ),
+                ),
+              ),
+            )
+                : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (prefixIcon != null) ...[
+                  Icon(
+                    prefixIcon,
+                    size: 20.sp,
+                    color: effectiveForegroundColor,
+                  ),
+                  SizedBox(width: 8.w),
+                ],
+                Flexible(
+                  child: Text(
+                    text,
+                    style: finalTextStyle,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                if (suffixIcon != null) ...[
+                  SizedBox(width: 8.w),
+                  Icon(
+                    suffixIcon,
+                    size: 20.sp,
+                    color: effectiveForegroundColor,
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
