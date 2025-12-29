@@ -18,7 +18,7 @@ class IntroScreen1 extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/intro1.png'),
+                image: AssetImage('assets/images/intro1.png'),
                 fit: BoxFit.cover,
               ),
             ),

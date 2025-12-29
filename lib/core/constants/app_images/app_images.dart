@@ -34,5 +34,5 @@
   /// Images and logos
 
   final background = "assets/images/background.png";
-  final logo = "assets/images/background.png";
+  final logo = "assets/images/logo.png";
 

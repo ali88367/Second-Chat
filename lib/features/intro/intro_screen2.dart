@@ -18,7 +18,7 @@ class IntroScreen2 extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/Background.png'),
+                image: AssetImage('assets/images/Background.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -105,7 +105,7 @@ class IntroScreen2 extends StatelessWidget {
             left: 0,
             right: 0,
             child: Image.asset(
-              'assets/bunny.png',
+              'assets/images/bunny.png',
               height: 300.h,
             ),
           ),
@@ -186,20 +186,20 @@ class IntroScreen2 extends StatelessWidget {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
-                        imagePath: 'assets/twitch.png',
+                        imagePath: 'assets/images/twitch.png',
                       ),
                       SizedBox(height: 12.h),
 
                       PlatformButton(
                         label: 'Kick',
                         color: const Color(0xFF42A720), // solid green
-                        imagePath: 'assets/kick.png',                      ),
+                        imagePath: 'assets/images/kick.png',                      ),
                       SizedBox(height: 12.h),
 
                       PlatformButton(
                         label: 'YouTube',
                         color: const Color(0xFFDD2C28), // solid red
-                        imagePath: 'assets/youtube.png',                      ),
+                        imagePath: 'assets/images/youtube.png',                      ),
 
                     ],
                   ),

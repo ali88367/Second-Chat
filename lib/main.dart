@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:second_chat/features/intro/intro_screen1.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/constants/constants.dart';
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppConstants.appName,
-          
+
           // Theme Configuration
           theme: ThemeData(
             useMaterial3: true,
@@ -172,7 +175,7 @@ class MyApp extends StatelessWidget {
 
           // Initial Screen - Using direct widget reference (no string routes)
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home: const Test(),
+          home:  HomeScreen2(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,
