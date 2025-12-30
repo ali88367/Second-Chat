@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:second_chat/features/intro/intro_screen5.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
 
 import '../../core/themes/textstyles.dart';
 
@@ -19,7 +21,7 @@ class IntroScreen4Controller extends GetxController {
     isLoading.value = false;
 
     // Navigate to IntroScreen4 using GetX
-    Get.to(() => const IntroScreen4());
+    Get.to(() => const HomeScreen2());
   }
 }
 class IntroScreen4 extends StatefulWidget {

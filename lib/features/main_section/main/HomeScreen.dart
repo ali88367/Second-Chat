@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/themes/textstyles.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -93,12 +95,9 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'You haven\'t started the\nstream yet',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white38,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5,
-                    letterSpacing: 0.2,
+                  style: sfProDisplay400(
+                    28.sp,
+                    Color.fromRGBO(255, 255, 255, 0.4),
                   ),
                 ),
               ],

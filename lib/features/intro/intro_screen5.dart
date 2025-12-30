@@ -19,7 +19,7 @@ class IntroScreen5 extends StatelessWidget {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              'assets/Background.png',
+              'assets/images/Background.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -89,7 +89,7 @@ class IntroScreen5 extends StatelessWidget {
                           children: [
                             Center(
                               child: Image.asset(
-                                'assets/logo.png',
+                                'assets/images/logo.png',
                                 width: 280.w,
                                 height: 200.h,
                                 fit: BoxFit.contain,
@@ -98,7 +98,7 @@ class IntroScreen5 extends StatelessWidget {
                             ),
                             Center(
                               child: Image.asset(
-                                'assets/character.png',
+                                'assets/images/character.png',
                                 width: 280.w,
                                 height: 280.h,
                                 fit: BoxFit.contain,

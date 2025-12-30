@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen.dart';
+import 'package:second_chat/features/main_section/stream/stream_screen.dart';
 
 import '../settings/settings_bottomsheet_column.dart';
 
@@ -50,10 +52,15 @@ class HomeScreen2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Offline Button
-                  _buildImageButton(
-                    'assets/images/offline.png',
-                    width: 119.w,
-                    height: 36.h,
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(StreamScreen());
+                    },
+                    child: _buildImageButton(
+                      'assets/images/offline.png',
+                      width: 119.w,
+                      height: 36.h,
+                    ),
                   ),
 
                   // Right Buttons
@@ -93,10 +100,15 @@ class HomeScreen2 extends StatelessWidget {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset(
-                      'assets/images/stream.png',
-                      width: 47.w,
-                      height: 56.w,
+                    GestureDetector(
+                      onTap:(){
+                        Get.to(HomeScreen());
+                      },
+                      child: Image.asset(
+                        'assets/images/stream.png',
+                        width: 47.w,
+                        height: 56.w,
+                      ),
                     ),
                     SizedBox(height: 24.h),
                     Text(
