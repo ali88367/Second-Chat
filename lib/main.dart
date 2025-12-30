@@ -175,7 +175,7 @@ class MyApp extends StatelessWidget {
 
           // Initial Screen - Using direct widget reference (no string routes)
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home:  HomeScreen2(),
+          home:  IntroScreen1(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,

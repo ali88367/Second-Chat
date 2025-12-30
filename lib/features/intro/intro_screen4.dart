@@ -2,10 +2,26 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../core/themes/textstyles.dart';
 
+// Step 1: Create a GetX Controller
+class IntroScreen4Controller extends GetxController {
+  var isLoading = false.obs;
 
+  void startTrial() async {
+    isLoading.value = true;
+
+    // Show loading for 2 seconds
+    await Future.delayed(const Duration(seconds: 2));
+
+    isLoading.value = false;
+
+    // Navigate to IntroScreen4 using GetX
+    Get.to(() => const IntroScreen4());
+  }
+}
 class IntroScreen4 extends StatefulWidget {
   const IntroScreen4({Key? key}) : super(key: key);
 
@@ -40,6 +56,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
 
   @override
   Widget build(BuildContext context) {
+    final IntroScreen4Controller controller = Get.put(IntroScreen4Controller());
+
     return Scaffold(
       body: Stack(
         children: [
@@ -59,7 +77,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
               children: [
                 // Close Button
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10.w, vertical: 10.h),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(
@@ -84,44 +103,47 @@ class _IntroScreen4State extends State<IntroScreen4> {
                 SizedBox(height: 20.h),
 
                 // Title
-             Column(
-                    children: [
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Unlock the full experience with  ',
-                              style: sfProDisplay600(34.sp, Colors.white),
+                Column(
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Unlock the full experience with  ',
+                            style: sfProDisplay600(34.sp, Colors.white),
+                          ),
+                          TextSpan(
+                            text: 'Premium',
+                            style: sfProDisplay600(
+                              34.sp,
+                              Colors
+                                  .white, // base color won't matter, overridden by foreground
+                            ).copyWith(
+                              foreground: Paint()
+                                ..shader = LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xFFF2B269), // yellow-orange
+                                    Color(0xFFF17A7A), // fully opaque red
+                                    Color(0xFFFFE6A7), // light yellow
+                                  ],
+                                  stops: [0.2, 0.5, 0.8],
+                                  // shift stops to give more space to red
+                                  transform: GradientRotation(
+                                      135.5 * 3.1415927 / 180),
+                                ).createShader(
+                                  Rect.fromLTWH(0, 0, 200, 50),
+                                ),
                             ),
-                            TextSpan(
-                              text: 'Premium',
-                              style: sfProDisplay600(
-                                34.sp,
-                                Colors.white, // base color won't matter, overridden by foreground
-                              ).copyWith(
-                                foreground: Paint()
-                                  ..shader = LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Color(0xFFF2B269),   // yellow-orange
-                                      Color(0xFFF17A7A),   // fully opaque red
-                                      Color(0xFFFFE6A7),   // light yellow
-                                    ],
-                                    stops: [0.2, 0.5, 0.8], // shift stops to give more space to red
-                                    transform: GradientRotation(135.5 * 3.1415927 / 180),
-                                  ).createShader(
-                                    Rect.fromLTWH(0, 0, 200, 50),
-                                  ),
-                              ),
-                            ),
+                          ),
 
-                          ],
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
 
                 SizedBox(height: 30.h),
@@ -141,12 +163,18 @@ class _IntroScreen4State extends State<IntroScreen4> {
                             children: [
                               _buildGlassButton(),
                               SizedBox(height: 24.h),
-                              _buildFeatureRow('Multi-Platform Chat', true, false),
-                              _buildFeatureRow('Multi-Stream Monitor', false, true),
+                              _buildFeatureRow(
+                                  'Multi-Platform Chat', true, false),
+                              _buildFeatureRow(
+                                  'Multi-Stream Monitor', false, true),
                               _buildFeatureRow('Activity Feed', true, false),
-                              _buildFeatureRow('Title/Category Manage', false, true),
-                              _buildFeatureRow('Edge LED Notification', false, true),
-                             // SizedBox(height: 100.h), // extra space for button
+                              _buildFeatureRow(
+                                  'Title/Category Manage', false, true),
+                              _buildFeatureRow(
+                                  'Edge LED Notification', false, true),
+                              _buildFeatureRow(
+                                  'Custom Notification', false, true),
+                              // SizedBox(height: 100.h), // extra space for button
                             ],
                           ),
                         ),
@@ -168,41 +196,54 @@ class _IntroScreen4State extends State<IntroScreen4> {
                 ),
 
                 // Start Trial Button
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 16.h),
-                  child: GestureDetector(
-                    onTap: _isLoading ? null : _startTrial,
+                Obx(
+                      () => GestureDetector(
+                    onTap: controller.isLoading.value
+                        ? null
+                        : controller.startTrial,
                     child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16.w),
                       width: double.infinity,
-                      height: 52.h,
+                      height: 56.h,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFE8B87E), Color(0xFFD4A574)],
+                          colors: [
+                            Color(0xFFE8B87E),
+                            Color(0xFFD4A574),
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(26.r),
+                        borderRadius: BorderRadius.circular(28.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFFC107).withOpacity(0.35),
+                            blurRadius: 16,
+                            spreadRadius: 9,
+                          ),
+                        ],
                       ),
                       child: Center(
-                        child: _isLoading
+                        child: controller.isLoading.value
                             ? SizedBox(
-                          width: 22.w,
-                          height: 22.w,
+                          width: 24.w,
+                          height: 24.w,
                           child: const CircularProgressIndicator(
                             strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                             : Text(
                           'Start My 14 Day Free Trial',
-                          style: sfProText500(16.sp, Colors.white),
+                          style: sfProText500(17.sp, Colors.white),
                         ),
                       ),
                     ),
                   ),
                 ),
 
-                SizedBox(height: 8.h),
+                SizedBox(height: 22.h),
               ],
             ),
           ),
@@ -218,15 +259,16 @@ class _IntroScreen4State extends State<IntroScreen4> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Glass blur effect
         child: Container(
-        //  width: 250.w, // Fixed width
+          //  width: 250.w, // Fixed width
           height: 58.h, // Fixed height
-          padding:  EdgeInsets.symmetric(horizontal: 16.w
+          padding: EdgeInsets.symmetric(horizontal: 16.w
           ),
           decoration: BoxDecoration(
             color: const Color.fromRGBO(48, 48, 48, 0.5), // rgba(48,48,48,0.5)
             borderRadius: BorderRadius.circular(37),
             border: Border.all(
-              color: Colors.white.withOpacity(0.2), // subtle border for glass effect
+              color: Colors.white.withOpacity(0.2),
+              // subtle border for glass effect
               width: 1.5,
             ),
           ),
@@ -278,7 +320,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
                     ),
                     child: Icon(
                       isFree ? Icons.check : Icons.close,
-                      color: isFree ? Colors.white : Colors.white.withOpacity(0.5),
+                      color: isFree ? Colors.white : Colors.white.withOpacity(
+                          0.5),
                       size: 16.sp,
                     ),
                   ),
@@ -322,50 +365,63 @@ class _IntroScreen4State extends State<IntroScreen4> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Crown
-          Container(
-            width: 40.w,
-            height: 40.w,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.workspace_premium,
-              color: Colors.white,
-              size: 24.sp,
-            ),
-          ),
+          SizedBox(
+              height: 32.h,
+              width: 32.w,
+              child: Image.asset('assets/images/crown.png')),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: 20.h),
 
           // Icons
-          _buildBadgeIcon(Icons.close, false),
-          SizedBox(height: 18.h),
-          _buildBadgeIcon(Icons.info_outline, true),
-          SizedBox(height: 18.h),
-          _buildBadgeIcon(Icons.check, false),
-          SizedBox(height: 18.h),
-          _buildBadgeIcon(Icons.add, true),
-          SizedBox(height: 18.h),
-          _buildBadgeIcon(Icons.check, false),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkPlus.png',
+            isInfo: false,
+          ),
+          SizedBox(height: 28.h),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkInfo.png',
+            isInfo: true,
+          ),
+
+          SizedBox(height: 28.h),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkPlus.png',
+            isInfo: false,
+          ),
+          SizedBox(height: 28.h),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkInfo.png',
+            isInfo: true,
+          ),
+          SizedBox(height: 28.h),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkInfo.png',
+            isInfo: true,
+          ),
+          SizedBox(height: 28.h),
+          _buildBadgeIcon(
+            imagePath: 'assets/images/checkInfo.png',
+            isInfo: true,
+          ),
+
 
         ],
       ),
     );
   }
 
-  Widget _buildBadgeIcon(IconData icon, bool isInfo) {
+  Widget _buildBadgeIcon({
+    required String imagePath,
+    required bool isInfo,
+  }) {
     return Container(
-      width: 32.w,
-      height: 32.w,
-      decoration: BoxDecoration(
-        color: isInfo ? Colors.white.withOpacity(0.3) : const Color(0xFFFF8C42),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 18.sp,
+child:  Center(
+        child: Image.asset(
+          imagePath,
+          width: 38.w,
+          height: 38.w,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
