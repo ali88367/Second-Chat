@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
+
+import '../settings/settings_bottomsheet_column.dart';
 
 class HomeScreen2 extends StatelessWidget {
   const HomeScreen2({super.key});
@@ -223,15 +226,29 @@ SizedBox(width: 10.w,),
                     hasArrow: true,
                   ),
                   _buildDivider(),
-                  _buildMenuItem(
-                    imagePath: 'assets/images/settingHome.png',
-                    title: 'Open settings',
-                    hasArrow: true,
+                  InkWell(
+                      onTap: (){
+                        print('siuuu');
+                        Get.bottomSheet(
+                          isDismissible: true,
+                            isScrollControlled: true,
+                            enableDrag: true,
+                            Container(
+                          height: Get.height * .9,
+                          child: SettingsBottomsheetColumn(),
+                        ));
+
+                      },
+              child:       _buildMenuItem(
+                      imagePath: 'assets/images/settingHome.png',
+                      title: 'Open settings',
+                      hasArrow: true,
+                    ),
                   ),
                   _buildDivider(),
                   _buildMenuItem(
                     imagePath: 'assets/images/calendar.png',
-                    title: 'Settings',
+                    title: 'Customizable Streaks',
                     hasArrow: true,
                   ),
                 ],
@@ -273,7 +290,7 @@ SizedBox(width: 10.w,),
             Expanded(
               child: Text(
                 title,
-                style: sfProText400(17.sp, Colors.white)
+                style: sfProText400(16.sp, Colors.white)
               ),
             ),
 
