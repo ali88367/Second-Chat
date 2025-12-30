@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
   final cyanBlue = Color(0xFF84DEE4); // Cyan Blue
   final beige = Color(0xFFE6C571); // Beige
   final bottomSheetGrey = Color(0xFF141212); // Beige
-  final onBottomSheetGrey = Color(0xFF1E1D20); // Beige
+  final onBottomSheetGrey = Color(0xFF1E1D20);
   final golden = Color.fromRGBO(246, 246, 146, 0.25);
   final goldeffect = Color.fromRGBO(255, 230, 167, 0.25);
   final grey = Color.fromRGBO(235, 235, 245, 0.3);

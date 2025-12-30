@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
 
 import '../settings/settings_bottomsheet_column.dart';
@@ -228,13 +229,19 @@ SizedBox(width: 10.w,),
                   _buildDivider(),
                   InkWell(
                       onTap: (){
-                        print('siuuu');
                         Get.bottomSheet(
                           isDismissible: true,
                             isScrollControlled: true,
                             enableDrag: true,
                             Container(
                           height: Get.height * .9,
+                          decoration: BoxDecoration(
+                            color: bottomSheetGrey,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(18.r),
+                              topLeft: Radius.circular(18.r),
+                            ),
+                          ),
                           child: SettingsBottomsheetColumn(),
                         ));
 

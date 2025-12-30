@@ -80,9 +80,7 @@ class ConnectPlatformSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Padding(
+    return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
           children: [
@@ -153,7 +151,6 @@ class ConnectPlatformSetting extends StatelessWidget {
             SizedBox(height: 20.h),
           ],
         ),
-      ),
-    );
+      );
   }
 }

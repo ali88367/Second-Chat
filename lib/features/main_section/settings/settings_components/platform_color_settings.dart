@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ios_color_picker/show_ios_color_picker.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/constants/app_images/app_images.dart';
+import 'package:second_chat/core/themes/textstyles.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../../core/widgets/custom_button.dart';
@@ -47,12 +48,22 @@ class _PlatformColorSettingsState extends State<PlatformColorSettings> {
   Widget build(BuildContext context) {
     final Color displayColor = selectedColor.withOpacity(opacity);
 
-    return Scaffold(
-      backgroundColor: bottomSheetGrey,
-      body: SafeArea(
-        child: Column(
+    return Column(
           children: [
             // Top bar: Twitch button + 3 dots
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(back_arrow_icon, height: 44.h),
+                Text(
+                  "Platform Color",
+                  style: sfProDisplay600(17.sp, onDark),
+                ),
+                SizedBox(width: 44.w),
+              ],
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
               child: Column(
@@ -163,71 +174,6 @@ class _PlatformColorSettingsState extends State<PlatformColorSettings> {
               ),
             ),
 
-            SizedBox(height: 40.h),
-
-            // Current Color Preview with Opacity Info
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Row(
-                children: [
-                  // Checkerboard + color preview
-                  Stack(
-                    children: [
-                      Container(
-                        width: 60.w,
-                        height: 60.h,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[800],
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: CustomPaint(painter: CheckerboardPainter()),
-                      ),
-                      Container(
-                        width: 60.w,
-                        height: 60.h,
-                        decoration: BoxDecoration(
-                          color: displayColor,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 20.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Current Color',
-                        style: TextStyle(
-                          fontFamily: 'SFProText',
-                          fontSize: 16.sp,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        '#${displayColor.value.toRadixString(16).toUpperCase().padLeft(8, '0')}',
-                        style: TextStyle(
-                          fontFamily: 'SFProText',
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'Opacity: ${(opacity * 100).round()}%',
-                        style: TextStyle(
-                          fontFamily: 'SFProText',
-                          fontSize: 14.sp,
-                          color: Colors.white60,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
             const Spacer(),
 
             Container(
@@ -283,11 +229,9 @@ class _PlatformColorSettingsState extends State<PlatformColorSettings> {
                 ],
               ),
             ),
-            SizedBox(height: 10.h,),
+            SizedBox(height: 30.h,),
           ],
-        ),
-      ),
-    );
+        );
   }
 }
 

@@ -4,15 +4,14 @@ import 'package:get/get.dart';
 import 'package:second_chat/controllers/Main%20Section%20Controllers/settings_controller.dart';
 import 'package:second_chat/core/constants/app_images/app_images.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
-
+import 'package:second_chat/features/main_section/settings/settings_components/connect_platform_setting.dart';
+import 'package:second_chat/features/main_section/settings/settings_components/platform_color_settings.dart';
 import '../../../core/constants/app_colors/app_colors.dart';
 import '../../../core/widgets/custom_switch.dart';
 
-
 class SettingsBottomsheetColumn extends StatelessWidget {
-   SettingsBottomsheetColumn({super.key});
+  SettingsBottomsheetColumn({super.key});
 
-  // Updated Map with flexible suffix support
   final Map<String, List<Map<String, dynamic>>> settingsData = {
     "Notifications": [
       {
@@ -25,37 +24,38 @@ class SettingsBottomsheetColumn extends StatelessWidget {
         "prefixImageAsset": light_bulb_icon,
         "title": "LED Notifications",
         "isSwitch": true,
+        "isForward": true,
         "switchKey": "ledNotifications",
       },
+    ],
+    "": [
       {
         "prefixImageAsset": linking_icon,
         "title": "Connect Other Platforms",
-        "isSwitch": true,
-        "switchKey": "connectOtherPlatforms",
+        "isForward": true,
+        // Special flag to trigger bottom sheet instead of page navigation
+        "openAsBottomSheet": "connect",
       },
     ],
-    "Chat": [
+    "CHAT": [
       {
         "prefixImageAsset": font_size_icon,
         "title": "Font Size",
-        "suffixImageAsset1": "assets/icons/circle_k.png", // Brown K circle
-        "suffixText": "D",
+        "suffixText": "M",
         "isForward": true,
         "nextPage": "/font-size",
       },
       {
         "prefixImageAsset": subscribers_icon,
         "title": "Show Subscribers Only",
-        "isSwitch": true,
         "switchKey": "showSubscribersOnly",
-        "suffixImageAsset": key_icon_2, // Small key icon
+        "isLocked": true,
       },
       {
         "prefixImageAsset": verified_icon,
         "title": "Show VIP/Mods Only",
-        "isSwitch": true,
         "switchKey": "showVipsOnly",
-        "suffixImageAsset": key_icon_2, // Small key icon
+        "isLocked": true,
       },
       {
         "prefixImageAsset": view_count_icon,
@@ -72,22 +72,21 @@ class SettingsBottomsheetColumn extends StatelessWidget {
       {
         "prefixImageAsset": multi_chat_icon,
         "title": "Multi-Chat Merged Mode",
-        "isSwitch": true,
         "switchKey": "multiChatMergedMode",
-        "suffixImageAsset": key_icon_2,
+        "isLocked": true,
       },
       {
         "prefixImageAsset": color_brush_icon,
         "title": "Platform Colour",
         "isForward": true,
-        "nextPage": "/platform-color",
+        // Special flag to trigger bottom sheet
+        "openAsBottomSheet": "color",
       },
     ],
-    "Language": [
+    "LANGUAGE": [
       {
         "prefixImageAsset": language_icon,
         "title": "App Language",
-        // "suffixImageAsset1": "assets/icons/flag_en.png", // En circle
         "suffixText": "D",
         "isForward": true,
         "nextPage": "/language",
@@ -95,25 +94,28 @@ class SettingsBottomsheetColumn extends StatelessWidget {
       {
         "prefixImageAsset": time_zone_icon,
         "title": "Time Zone Detection",
-        "suffixImageAsset1": language_icon,
-        "suffixText": "D",
+        "isSwitch": true,
+        "switchKey": "timeZoneDetection",
+      },
+      {
+        "prefixImageAsset": "assets/icons/clock_icon.png",
+        "title": "Clock",
+        "suffixText": "12h",
         "isForward": true,
-        "nextPage": "/timezone",
+        "nextPage": "/clock",
       },
     ],
-    "Other": [
+    "OTHER": [
       {
         "prefixImageAsset": screen_icon,
         "title": "Multi-Screen Preview",
-        "suffixImageAsset": key_icon_2, // Green key icon
-        "isForward": true,
+        "isLocked": true,
         "nextPage": "/multi-screen",
       },
       {
         "prefixImageAsset": animation_icon,
         "title": "Animations",
-        "suffixImageAsset": key_icon_2,
-        "isForward": true,
+        "isLocked": true,
         "nextPage": "/animations",
       },
       {
@@ -125,15 +127,13 @@ class SettingsBottomsheetColumn extends StatelessWidget {
       {
         "prefixImageAsset": filter_icon,
         "title": "Full Activity Filters",
-        "suffixImageAsset": key_icon_2,
-        "isForward": true,
+        "isLocked": true,
         "nextPage": "/activity-filters",
       },
       {
         "prefixImageAsset": speaker_icon,
         "title": "TTS Advanced settings",
-        "suffixImageAsset": key_icon_2,
-        "isForward": true,
+        "isLocked": true,
         "nextPage": "/tts-settings",
       },
     ],
@@ -145,7 +145,6 @@ class SettingsBottomsheetColumn extends StatelessWidget {
 
     return Column(
       children: [
-        // Drag handle
         Align(
           alignment: Alignment.center,
           child: Container(
@@ -159,235 +158,369 @@ class SettingsBottomsheetColumn extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0.w, ),
+          padding: EdgeInsets.symmetric(horizontal: 16.0.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(x_icon, height: 44.h,),
-              Text("Settings", style: sfProText600(17.sp, onDark),),
-              SizedBox(width: 44.w,)
+              InkWell(
+                onTap: () => Get.back(),
+                child: Image.asset(x_icon, height: 44.h),
+              ),
+              Text("Settings", style: sfProText600(17.sp, Colors.white)),
+              SizedBox(width: 44.w),
             ],
           ),
         ),
-        SizedBox(height: 22.h,),
+        SizedBox(height: 10.h),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            itemCount: settingsData.length,
-            itemBuilder: (context, sectionIndex) {
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            itemCount: settingsData.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) return const FreePlanWidget();
+
+              int sectionIndex = index - 1;
               String sectionTitle = settingsData.keys.elementAt(sectionIndex);
               List<Map<String, dynamic>> tiles = settingsData[sectionTitle]!;
 
-              return Container(
-                margin: EdgeInsets.only(bottom: 16.h),
-                decoration: BoxDecoration(
-                  color: onBottomSheetGrey,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Section header
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (sectionTitle.isNotEmpty)
                     Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
                       child: Text(
-                        sectionTitle,
+                        sectionTitle.toUpperCase(),
                         style: sfProDisplay400(
-                          14.sp,
-                          Color.fromRGBO(235, 235, 245, 0.6),
+                          13.sp,
+                          const Color.fromRGBO(235, 235, 245, 0.6),
                         ),
                       ),
+                    )
+                  else
+                    SizedBox(height: 6.h),
+                  if (sectionTitle == "CHAT")
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: const ChatPlatformTabs(),
                     ),
-
-                    // Tiles
-                    ...tiles.map((tile) {
-                      final bool isSwitch = tile["isSwitch"] ?? false;
-                      final bool isForward = tile["isForward"] ?? false;
-                      final String? switchKey = tile["switchKey"];
-
-                      // Get switch value from controller
-                      RxBool? switchObs;
-                      if (isSwitch && switchKey != null) {
-                        switch (switchKey) {
-                          case "notifications":
-                            switchObs = controller.notifications;
-                            break;
-                          case "ledNotifications":
-                            switchObs = controller.ledNotifications;
-                            break;
-                          case "connectOtherPlatforms":
-                            switchObs = controller.connectOtherPlatforms;
-                            break;
-                          case "showSubscribersOnly":
-                            switchObs = controller.showSubscribersOnly;
-                            break;
-                          case "showVipsOnly":
-                            switchObs = controller.showVipsOnly;
-                            break;
-                          case "viewerCount":
-                            switchObs = controller.viewerCount;
-                            break;
-                          case "hideViewerNames":
-                            switchObs = controller.hideViewerNames;
-                            break;
-                          case "multiChatMergedMode":
-                            switchObs = controller.multiChatMergedMode;
-                            break;
-                          case "lowPowerMode":
-                            switchObs = controller.lowPowerMode;
-                            break;
-                        }
-                      }
-
-                      return Stack(
-                        children: [
-                          Container(
-                            height: 56.h,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                            ),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        width: 0.5.w,
-                                        color: Color.fromRGBO(120, 120, 128, 0.36)
-                                    )
-                                )
-                            ),
-                            alignment: Alignment.center,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12.r),
-                              onTap: isForward && tile["nextPage"] != null
-                                  ? () => Get.toNamed(tile["nextPage"]!)
-                                  : (isSwitch && switchKey != null)
-                                  ? () => switchObs?.toggle()
-                                  : null,
-                              child: Row(
-                                children: [
-                                  // Prefix icon
-                                  Image.asset(
-                                    tile["prefixImageAsset"],
-                                    width: 24.w,
-                                    height: 24.h,
-                                    color: beige,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Icon(Icons.error, color: Colors.red),
-                                  ),
-                                  SizedBox(width: 12.w),
-
-                                  // Title & Subtitle
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          tile["title"],
-                                          style: sfProText400(
-                                            14.sp,
-                                            Colors.white,
-                                          ),
-                                        ),
-                                        if (tile["subtitle"] != null)
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 2.h),
-                                            child: Text(
-                                              tile["subtitle"],
-                                              style: sfProText400(
-                                                13.sp,
-                                                Colors.white60,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Flexible Suffix Section
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Switch (highest priority)
-                                      if (isSwitch && switchObs != null)
-                                        Obx(
-                                              () => CustomSwitch(
-                                            value: switchObs!.value,
-                                            onChanged: null, // Row handles tap
-                                          ),
-                                        )
-                                      else ...[
-                                        // suffixImageAsset1 (circle K, En flag, etc.)
-                                        if (tile["suffixImageAsset1"] != null)
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 6.w),
-                                            child: Image.asset(
-                                              tile["suffixImageAsset1"],
-                                              height: tile["suffixImageAsset1"] == key_icon_2 ? 38.h : 20.h,
-                                              errorBuilder: (context, error, stackTrace) =>
-                                                  Container(width: 20.w, height: 20.h),
-                                            ),
-                                          ),
-
-                                        // suffixText (D, 12h, etc.)
-                                        if (tile["suffixText"] != null)
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 6.w),
-                                            child: Text(
-                                              tile["suffixText"],
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-
-                                        // Legacy suffixImageAsset (key icons)
-                                        if (tile["suffixImageAsset"] != null)
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 8.w),
-                                            child: Image.asset(
-                                              tile["suffixImageAsset"],
-                                              height: tile["suffixImageAsset"] == key_icon_2 ? 38.h : 16.h,
-                                            ),
-                                          ),
-
-                                        // Forward chevron
-                                        if (isForward)
-                                          Image.asset(
-                                            forward_arrow_icon,
-                                            height: 28.w,
-                                          ),
-                                      ],
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          if (tile["suffixImageAsset"] == key_icon_2) ... [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              height: 56.h,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(.3)
-                            ),
-                          )),
-                      ],
-                        ],
-                      );
-                    }).toList(),
-                  ],
-                ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: onBottomSheetGrey,
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Column(
+                      children: tiles.map((tile) {
+                        return _buildTile(tile, tiles, controller);
+                      }).toList(),
+                    ),
+                  ),
+                ],
               );
             },
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildTile(
+      Map<String, dynamic> tile,
+      List<Map<String, dynamic>> allTiles,
+      SettingsController controller,
+      ) {
+    final bool isSwitch = tile["isSwitch"] ?? false;
+    final bool isForward = tile["isForward"] ?? false;
+    final bool isLocked = tile["isLocked"] ?? false;
+    final String? switchKey = tile["switchKey"];
+    final String? openAsBottomSheet = tile["openAsBottomSheet"]; // "connect" or "color"
+
+    RxBool? switchObs;
+    if (isSwitch && switchKey != null) {
+      switch (switchKey) {
+        case "notifications":
+          switchObs = controller.notifications;
+          break;
+        case "ledNotifications":
+          switchObs = controller.ledNotifications;
+          break;
+        case "viewerCount":
+          switchObs = controller.viewerCount;
+          break;
+        case "hideViewerNames":
+          switchObs = controller.hideViewerNames;
+          break;
+        case "lowPowerMode":
+          switchObs = controller.lowPowerMode;
+          break;
+        case "timeZoneDetection":
+          switchObs = true.obs;
+          break;
+      }
+    }
+
+    return Stack(
+      children: [
+        Container(
+          height: 56.h,
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                width: allTiles.indexOf(tile) == 0 ? 0 : 0.5.w,
+                color: const Color.fromRGBO(120, 120, 128, 0.36),
+              ),
+            ),
+          ),
+          child: InkWell(
+            onTap: isLocked
+                ? null
+                : () {
+              // Special handling for bottom sheet tiles
+              if (openAsBottomSheet != null) {
+                Get.back(); // Close current settings sheet
+                if (openAsBottomSheet == "connect") {
+                      Get.bottomSheet(
+                          isDismissible: true,
+                          isScrollControlled: true,
+                          enableDrag: true,
+                          Container(
+                            height: Get.height * .9,
+                            decoration: BoxDecoration(
+                              color: bottomSheetGrey,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(18.r),
+                                topLeft: Radius.circular(18.r),
+                              ),
+                            ),
+                            child: ConnectPlatformSetting()
+                          )
+
+                  );
+                } else if (openAsBottomSheet == "color") {
+                  Get.bottomSheet(
+                      isDismissible: true,
+                      isScrollControlled: true,
+                      enableDrag: true,
+                      Container(
+                        height: Get.height * .9,
+                        decoration: BoxDecoration(
+                          color: bottomSheetGrey,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(18.r),
+                            topLeft: Radius.circular(18.r),
+                          ),
+                        ),
+                        child: PlatformColorSettings(),
+                      ));
+                }
+                return;
+              }
+
+              // Normal navigation
+              if (isForward && tile["nextPage"] != null) {
+                Get.toNamed(tile["nextPage"]!);
+              } else if (isSwitch && switchObs != null) {
+                switchObs!.toggle();
+              }
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  tile["prefixImageAsset"],
+                  width: 24.w,
+                  height: 24.h,
+                  color: beige,
+                  errorBuilder: (_, __, ___) => const Icon(Icons.error, color: Colors.red),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Text(
+                    tile["title"],
+                    style: sfProText400(16.sp, Colors.white),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (tile["suffixImageAsset1"] != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 6.w),
+                        child: Image.asset(tile["suffixImageAsset1"], height: 20.h),
+                      ),
+                    if (tile["suffixText"] != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: Text(
+                          tile["suffixText"],
+                          style: TextStyle(
+                            color: const Color.fromRGBO(235, 235, 245, 0.6),
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    if (isSwitch && switchObs != null)
+                      Obx(() => CustomSwitch(
+                        value: switchObs!.value,
+                        onChanged: (val) => switchObs!.value = val,
+                      )),
+                    if (isForward || openAsBottomSheet != null)
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.w),
+                        child: Image.asset(forward_arrow_icon, height: 28.h),
+                      ),
+                    if (isLocked)
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.w),
+                        child: Image.asset(key_icon_2, height: 28.h),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (isLocked)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: allTiles.indexOf(tile) == 0
+                    ? BorderRadius.vertical(top: Radius.circular(16.r))
+                    : allTiles.indexOf(tile) == allTiles.length - 1
+                    ? BorderRadius.vertical(bottom: Radius.circular(16.r))
+                    : null,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+
+// Your existing FreePlanWidget and ChatPlatformTabs remain unchanged below...
+// (I've kept them exactly as you had them)
+
+class FreePlanWidget extends StatelessWidget {
+  const FreePlanWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      margin: EdgeInsets.only(bottom: 10.h),
+      decoration: BoxDecoration(
+        color: onBottomSheetGrey,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("£4.99 per month", style: sfProDisplay400(13.sp, Colors.white.withOpacity(0.5))),
+              SizedBox(height: 4.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text("Your Plan", style: sfProDisplay600(17.sp, Colors.white.withOpacity(0.6))),
+                  SizedBox(width: 8.w),
+                  Text("Free", style: sfProDisplay600(20.sp, Colors.white)),
+                ],
+              ),
+            ],
+          ),
+          Image.asset(key_icon, height: 76.h),
+        ],
+      ),
+    );
+  }
+}
+
+class ChatPlatformTabs extends StatefulWidget {
+  const ChatPlatformTabs({super.key});
+
+  @override
+  State<ChatPlatformTabs> createState() => _ChatPlatformTabsState();
+}
+
+class _ChatPlatformTabsState extends State<ChatPlatformTabs> {
+  String selected = "All";
+  final List<String> tabs = ["All", "Twitch", "Kick", "YouTube"];
+
+  @override
+  Widget build(BuildContext context) {
+    final Color twitchPurple = const Color(0xFF9146FF);
+    final Color kickGreen = const Color(0xFF53FC18);
+    final Color youtubeRed = Colors.red;
+
+    return Container(
+      height: 36.h,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: onBottomSheetGrey,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      padding: EdgeInsets.all(3.w),
+      child: Row(
+        children: tabs.asMap().entries.expand<Widget>((entry) {
+          final String tab = entry.value;
+          final bool isSelected = selected == tab;
+
+          Widget tabWidget = Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => selected = tab),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.black : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Text(
+                  tab,
+                  style: TextStyle(
+                    color: tab == "Twitch"
+                        ? twitchPurple
+                        : tab == "Kick"
+                        ? kickGreen
+                        : tab == "YouTube"
+                        ? youtubeRed
+                        : isSelected
+                        ? Colors.white
+                        : Colors.grey,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          if (tab == "Kick") {
+            return <Widget>[
+              Container(
+                width: 1.w,
+                color: Colors.grey.withOpacity(0.4),
+                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
+              ),
+              tabWidget,
+              Container(
+                width: 1.w,
+                color: Colors.grey.withOpacity(0.4),
+                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
+              ),
+            ];
+          }
+
+          return <Widget>[tabWidget];
+        }).toList(),
+      ),
     );
   }
 }
