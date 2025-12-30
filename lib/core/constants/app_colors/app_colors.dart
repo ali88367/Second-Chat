@@ -25,6 +25,10 @@ import 'package:flutter/material.dart';
   final golden = Color.fromRGBO(246, 246, 146, 0.25);
   final goldeffect = Color.fromRGBO(255, 230, 167, 0.25);
   final grey = Color.fromRGBO(235, 235, 245, 0.3);
+  final onDark = Colors.white;
+  final onLight = Colors.black;
+
+
 
   // Primary Colors
   final primary = Color(0xFF6366F1); // Indigo-500
