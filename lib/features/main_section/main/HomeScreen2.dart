@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
@@ -78,8 +80,6 @@ class HomeScreen2 extends StatelessWidget {
           ),
 
           // 🔹 Center Content
-// 🔹 Center Content
-          // 🔹 Center Content with Stack
           Center(
             child: Stack(
               alignment: Alignment.center,
@@ -98,15 +98,20 @@ class HomeScreen2 extends StatelessWidget {
                     Text(
                       'You haven\'t started the\nstream yet, but in the\nmeantime you can',
                       textAlign: TextAlign.center,
-                      style: sfProDisplay400(28.sp, Color.fromRGBO(255, 255, 255, 0.4))
+                      style: sfProDisplay400(
+                        28.sp,
+                        Color.fromRGBO(255, 255, 255, 0.4),
+                      ),
                     ),
+                    SizedBox(height: 350.h),
+
                   ],
                 ),
 
                 // Arrow Positioned below the text
                 Positioned(
-                 right: -18.w,
-                  top: 145.h, // adjust this value to move the arrow up/down
+                  right: -8.w,
+                  top: 185.h,
                   child: Image.asset(
                     'assets/images/arrow.png',
                     width: 30.w,
@@ -117,6 +122,13 @@ class HomeScreen2 extends StatelessWidget {
             ),
           ),
 
+          // 🔹 Getting Started Card (New Widget)
+          Positioned(
+            bottom: 110.h,
+            left: 16.w,
+            right: 16.w,
+            child: const GettingStartedCard(),
+          ),
         ],
       ),
     );
@@ -124,10 +136,10 @@ class HomeScreen2 extends StatelessWidget {
 
   /// 🔹 Reusable Image Button
   static Widget _buildImageButton(
-    String assetPath, {
-    required double width,
-    required double height,
-  }) {
+      String assetPath, {
+        required double width,
+        required double height,
+      }) {
     return SizedBox(
       width: width,
       height: height,
@@ -135,3 +147,172 @@ class HomeScreen2 extends StatelessWidget {
     );
   }
 }
+
+class GettingStartedCard extends StatefulWidget {
+  const GettingStartedCard({super.key});
+
+  @override
+  State<GettingStartedCard> createState() => _GettingStartedCardState();
+}
+
+class _GettingStartedCardState extends State<GettingStartedCard> {
+  bool isNotificationChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 1.h),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(30, 29, 32, 1),
+
+          borderRadius: BorderRadius.circular(22.r),
+
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          /// Header
+          Padding(
+            padding: EdgeInsets.all(8.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    'Getting Started',
+                    style: sfProText600(17.sp, Color.fromRGBO(235, 235, 245, 0.3))
+
+                  ),
+                ),
+SizedBox(width: 10.w,),
+                SizedBox(
+                  width: 18.w,
+                  height: 18.w,
+                  child:  Image.asset(
+                    'assets/images/circle.png',
+
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(47, 46, 51, 1),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(18.r),
+                  topRight: Radius.circular(18.r),
+                  bottomLeft: Radius.circular(22.r),
+                  bottomRight: Radius.circular(22.r),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildMenuItem(
+                    imagePath: 'assets/images/notification.png',
+                    title: 'Enable notifications',
+                    hasCheckbox: true,
+                  ),
+                  _buildDivider(),
+                  _buildMenuItem(
+                    imagePath: 'assets/images/signals.png',
+                    title: 'Add new stream service',
+                    hasArrow: true,
+                  ),
+                  _buildDivider(),
+                  _buildMenuItem(
+                    imagePath: 'assets/images/settingHome.png',
+                    title: 'Open settings',
+                    hasArrow: true,
+                  ),
+                  _buildDivider(),
+                  _buildMenuItem(
+                    imagePath: 'assets/images/calendar.png',
+                    title: 'Settings',
+                    hasArrow: true,
+                  ),
+                ],
+              ),
+            ),
+
+        ],
+      ),
+    );
+  }
+}
+
+
+  Widget _buildMenuItem({
+    required String imagePath,
+    required String title,
+    bool hasCheckbox = false,
+    bool isChecked = false,
+    VoidCallback? onTap,
+    bool hasArrow = false,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Row(
+          children: [
+            // Image with its own background
+            Image.asset(
+              imagePath,
+              width: 42.w,
+              height: 42.w,
+              fit: BoxFit.contain,
+            ),
+
+            SizedBox(width: 12.w),
+
+            // Title
+            Expanded(
+              child: Text(
+                title,
+                style: sfProText400(17.sp, Colors.white)
+              ),
+            ),
+
+            // Dotted Circle Checkbox or Arrow
+            if (hasCheckbox)
+            SizedBox(
+              height: 28.h,
+              width: 28.w,
+              child: Image.asset('assets/images/check.png'),
+            ),
+
+            if (hasArrow) ...[
+              Image.asset(
+                'assets/icons/loader_icon.png',
+                width: 28.w,
+                height: 28.w,
+                fit: BoxFit.contain,
+              ),
+
+              SizedBox(width: 12.w),
+              Image.asset(
+                'assets/images/arrowRight.png',
+                width: 28.w,
+                height: 28.w,
+                fit: BoxFit.contain,
+              ),
+            ]
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Padding(
+      padding: EdgeInsets.only(left: 18.w,right: 18.w),
+      child: Container(height: 0.5.h, color: const Color(0xFF38383A)),
+    );
+  }
+
+

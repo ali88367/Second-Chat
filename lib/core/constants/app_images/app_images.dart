@@ -42,7 +42,7 @@
   final logo = "assets/images/logo.png";
   final background_image = "assets/images/Background.png";
   final topBarShade = "assets/images/topbarshade.png";
-  final logo = "assets/images/background.png";
+  final logo1 = "assets/images/background.png";
   final twitch_logo = "assets/images/twitch_logo.png";
   final youtube_logo = "assets/images/youtube_logo.png";
   final kick_logo = "assets/images/kick_logo.png";

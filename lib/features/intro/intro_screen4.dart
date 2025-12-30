@@ -46,12 +46,12 @@ class _IntroScreen4State extends State<IntroScreen4> {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              'assets/Background.png',
+              'assets/images/Background.png',
               fit: BoxFit.cover,
             ),
           ),
           Image.asset(
-            'assets/topbarshade.png',
+            'assets/images/topbarshade.png',
             fit: BoxFit.cover,
           ),
           SafeArea(

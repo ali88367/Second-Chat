@@ -38,12 +38,12 @@ class IntroScreen3 extends StatelessWidget {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              'assets/Background.png',
+              'assets/images/Background.png',
               fit: BoxFit.cover,
             ),
           ),
           Image.asset(
-            'assets/topbarshade.png',
+            'assets/images/topbarshade.png',
             fit: BoxFit.cover,
           ),
           // Content
@@ -78,7 +78,7 @@ class IntroScreen3 extends StatelessWidget {
 
                 // Logo Image
                 Image.asset(
-                  'assets/logo.png',
+                  'assets/images/logo.png',
                   width: 280.w,
                   height: 140.h,
                   fit: BoxFit.contain,
@@ -135,7 +135,7 @@ class IntroScreen3 extends StatelessWidget {
                 // Trial Image
                 SizedBox(
                   height: 283.h,
-                  child: Image.asset('assets/trial.png'),
+                  child: Image.asset('assets/images/trial.png'),
                 ),
 
                 // Bottom Button
