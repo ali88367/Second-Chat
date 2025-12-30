@@ -38,6 +38,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
   animate_do: ^3.3.4
+  toggle_switch:
+  ios_color_picker:
 
 dev_dependencies:
   flutter_test:
