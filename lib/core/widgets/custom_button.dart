@@ -13,7 +13,7 @@ import '../constants/app_colors/app_colors.dart';
 /// - Fully customizable styling (colors, radius, size, shadow)
 /// - Linear gradient background support (takes priority over backgroundColor)
 /// - Loading state with spinner
-/// - Icon support (prefix and suffix)
+/// - Custom widget support for prefix and suffix (Image, Icon, Svg, etc.)
 /// - Full-width by default (can be customized)
 /// - Disabled state
 /// - Smooth tap animations
@@ -52,19 +52,19 @@ class CustomButton extends StatelessWidget {
   /// Whether the button is disabled
   final bool isDisabled;
 
-  /// Icon to display before the text
-  final IconData? prefixIcon;
+  /// Custom widget to display before the text (e.g. Icon, Image, SvgPicture)
+  final Widget? prefixWidget;
 
-  /// Icon to display after the text
-  final IconData? suffixIcon;
+  /// Custom widget to display after the text
+  final Widget? suffixWidget;
 
   /// Custom text style (optional)
   final TextStyle? textStyle;
 
-  /// Horizontal padding
+  /// Horizontal padding around content
   final double? horizontalPadding;
 
-  /// Vertical padding
+  /// Vertical padding around content
   final double? verticalPadding;
 
   /// Border color (optional)
@@ -86,8 +86,8 @@ class CustomButton extends StatelessWidget {
     this.boxShadow,
     this.isLoading = false,
     this.isDisabled = false,
-    this.prefixIcon,
-    this.suffixIcon,
+    this.prefixWidget,
+    this.suffixWidget,
     this.textStyle,
     this.horizontalPadding,
     this.verticalPadding,
@@ -100,8 +100,7 @@ class CustomButton extends StatelessWidget {
     final bool isEnabled = !isDisabled && !isLoading && onPressed != null;
 
     // Default values
-    final Color finalForegroundColor =
-        foregroundColor ?? textInverse;
+    final Color finalForegroundColor = foregroundColor ?? textInverse;
     final double finalHeight = height ?? 50.h;
     final double finalBorderRadius = borderRadius ?? (finalHeight / 2);
     final double? finalWidth = width;
@@ -116,14 +115,12 @@ class CustomButton extends StatelessWidget {
           ),
         ];
 
-    // Determine background decoration
+    // Background decoration
     final BoxDecoration decoration = BoxDecoration(
-      gradient: isEnabled ? gradient : null, // Gradient only when enabled
+      gradient: isEnabled ? gradient : null,
       color: isEnabled
-          ? (gradient != null
-          ? null // No solid color if gradient is used
-          : backgroundColor ?? primary)
-          : greyScale300, // Disabled state color
+          ? (gradient != null ? null : backgroundColor ?? primary)
+          : greyScale300,
       borderRadius: BorderRadius.circular(finalBorderRadius),
       border: borderColor != null
           ? Border.all(
@@ -134,12 +131,10 @@ class CustomButton extends StatelessWidget {
       boxShadow: isEnabled ? finalBoxShadow : null,
     );
 
-    // Apply disabled foreground color
     final Color effectiveForegroundColor = isEnabled
         ? finalForegroundColor
         : textDisabled;
 
-    // Determine text style
     final TextStyle finalTextStyle = textStyle ??
         sfProDisplay500(14.sp, effectiveForegroundColor);
 
@@ -153,7 +148,7 @@ class CustomButton extends StatelessWidget {
         child: InkWell(
           onTap: isEnabled ? onPressed : null,
           borderRadius: BorderRadius.circular(finalBorderRadius),
-          child: Container(
+          child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: finalHorizontalPadding,
               vertical: finalVerticalPadding,
@@ -175,12 +170,8 @@ class CustomButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (prefixIcon != null) ...[
-                  Icon(
-                    prefixIcon,
-                    size: 20.sp,
-                    color: effectiveForegroundColor,
-                  ),
+                if (prefixWidget != null) ...[
+                  prefixWidget!,
                   SizedBox(width: 8.w),
                 ],
                 Flexible(
@@ -192,13 +183,9 @@ class CustomButton extends StatelessWidget {
                     maxLines: 1,
                   ),
                 ),
-                if (suffixIcon != null) ...[
+                if (suffixWidget != null) ...[
                   SizedBox(width: 8.w),
-                  Icon(
-                    suffixIcon,
-                    size: 20.sp,
-                    color: effectiveForegroundColor,
-                  ),
+                  suffixWidget!,
                 ],
               ],
             ),

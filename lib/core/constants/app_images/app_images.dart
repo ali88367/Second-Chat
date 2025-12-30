@@ -16,7 +16,7 @@
   final x_icon = "assets/icons/x_icon.png";
   final network_icon = "assets/icons/network_icon.png";
   final notification_icon = "assets/icons/notification_icon.png";
-  final setting_icon = "assets/icons/notification_icon.png";
+  final setting_icon = "assets/icons/setting_icon.png";
   final setting_icon_2 = "assets/icons/notification_icon.png";
   final font_size_icon = "assets/icons/font_size_icon.png";
   final language_icon = "assets/icons/language_icon.png";
@@ -29,10 +29,22 @@
   final animation_icon = "assets/icons/animation_icon.png";
   final verified_icon = "assets/icons/verified_icon.png";
   final subscribers_icon = "assets/icons/subscribers_icon.png";
+  final twitch_icon = "assets/icons/twitch_icon.png";
+  final youtube_icon = "assets/icons/youtube_icon.png";
+  final kick_icon = "assets/icons/kick_icon.png";
+  final back_arrow_icon = "assets/icons/back_arrow_icon.png";
+  final wifi_icon = "assets/icons/wifi_icon.png";
 
 
   /// Images and logos
 
   final background = "assets/images/background.png";
   final logo = "assets/images/logo.png";
+  final background_image = "assets/images/Background.png";
+  final topBarShade = "assets/images/topbarshade.png";
+  final logo = "assets/images/background.png";
+  final twitch_logo = "assets/images/twitch_logo.png";
+  final youtube_logo = "assets/images/youtube_logo.png";
+  final kick_logo = "assets/images/kick_logo.png";
+  final kick = "assets/images/kick.png";
 

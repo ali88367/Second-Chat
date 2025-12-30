@@ -149,7 +149,7 @@ class SettingsBottomsheetColumn extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Container(
-            margin: EdgeInsets.only(top: 12.h, bottom: 20.h),
+            margin: EdgeInsets.only(top: 12.h, bottom: 8.h),
             width: 36.w,
             height: 4.h,
             decoration: BoxDecoration(
@@ -158,7 +158,19 @@ class SettingsBottomsheetColumn extends StatelessWidget {
             ),
           ),
         ),
-
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0.w, ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(x_icon, height: 44.h,),
+              Text("Settings", style: sfProText600(17.sp, onDark),),
+              SizedBox(width: 44.w,)
+            ],
+          ),
+        ),
+        SizedBox(height: 22.h,),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -181,10 +193,9 @@ class SettingsBottomsheetColumn extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
                       child: Text(
                         sectionTitle,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
+                        style: sfProDisplay400(
+                          14.sp,
+                          Color.fromRGBO(235, 235, 245, 0.6),
                         ),
                       ),
                     ),
@@ -273,7 +284,7 @@ class SettingsBottomsheetColumn extends StatelessWidget {
                                       children: [
                                         Text(
                                           tile["title"],
-                                          style: sfProDisplay400(
+                                          style: sfProText400(
                                             14.sp,
                                             Colors.white,
                                           ),
@@ -283,7 +294,7 @@ class SettingsBottomsheetColumn extends StatelessWidget {
                                             padding: EdgeInsets.only(top: 2.h),
                                             child: Text(
                                               tile["subtitle"],
-                                              style: sfProDisplay400(
+                                              style: sfProText400(
                                                 13.sp,
                                                 Colors.white60,
                                               ),
