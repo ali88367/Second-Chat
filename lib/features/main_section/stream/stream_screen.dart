@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
-
 import '../../../core/constants/app_images/app_images.dart';
-// Assuming these are your asset paths
-// import 'package:second_chat/core/constants/app_images/app_images.dart';
 
 class StreamScreen extends StatelessWidget {
   const StreamScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy assets for compilation if you don't have them imported yet
-
 
     return Scaffold(
       body: Stack(
@@ -26,15 +21,6 @@ class StreamScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Positioned(
-          //   top: 0,
-          //   left: 0,
-          //   right: 0,
-          //   child: Image.asset(
-          //     topBarShade,
-          //     fit: BoxFit.contain,
-          //   ),
-          // ),
 
           Positioned.fill(
             child: Container(

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ class IntroScreen4Controller extends GetxController {
     isLoading.value = false;
 
     // Navigate to IntroScreen4 using GetX
-    Get.to(() => const HomeScreen2());
+    Get.to(() => const IntroScreen5());
   }
 }
+
 class IntroScreen4 extends StatefulWidget {
   const IntroScreen4({Key? key}) : super(key: key);
 
@@ -74,6 +76,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
             'assets/images/topbarshade.png',
             fit: BoxFit.cover,
           ),
+// Bottom shade (flipped)
+
           SafeArea(
             child: Column(
               children: [

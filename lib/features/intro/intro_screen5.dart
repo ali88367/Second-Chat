@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
 
 import '../../core/themes/textstyles.dart';
-
 
 class IntroScreen5 extends StatelessWidget {
   const IntroScreen5({Key? key}) : super(key: key);
@@ -23,13 +23,17 @@ class IntroScreen5 extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
+          Image.asset('assets/images/topbarshade.png', fit: BoxFit.cover),
 
           SafeArea(
             child: Column(
               children: [
                 // Top Close Button
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
+                  ),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(
@@ -41,7 +45,11 @@ class IntroScreen5 extends StatelessWidget {
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.close, color: Colors.white, size: 24.sp),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 24.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -51,30 +59,11 @@ class IntroScreen5 extends StatelessWidget {
 
                 // Title
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.w),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Get started with a',
-                        style: sfProDisplay600(34.sp, Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 4.h),
-                      ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
-                          colors: const [Color(0xFFE8B87E), Color(0xFFE89B7E)],
-                        ).createShader(bounds),
-                        child: Text(
-                          '14 day free trial',
-                          style: sfProDisplay600(34.sp, Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 0.w),
+                  child: Image.asset('assets/images/trialInfo.png'),
                 ),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: 10.h),
 
                 // Swipeable Content
                 Expanded(
@@ -88,17 +77,22 @@ class IntroScreen5 extends StatelessWidget {
                           onPageChanged: controller.onPageChanged,
                           children: [
                             Center(
-                              child: Image.asset(
-                                'assets/images/logo.png',
-                                width: 280.w,
-                                height: 200.h,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => SizedBox(width: 280.w, height: 200.h),
+                              child: OverflowBox(
+                                maxHeight: 330.h, // bigger than 280.h
+                                maxWidth: 420.w,
+                                child: Image.asset(
+                                  'assets/images/secondGlow.png',
+                                  width: 420.w,
+                                  height: 360.h,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) =>
+                                      SizedBox(width: 280.w, height: 200.h),
+                                ),
                               ),
                             ),
                             Center(
                               child: Image.asset(
-                                'assets/images/character.png',
+                                'assets/images/bunnyGlow.png',
                                 width: 280.w,
                                 height: 280.h,
                                 fit: BoxFit.contain,
@@ -109,7 +103,11 @@ class IntroScreen5 extends StatelessWidget {
                                     color: Colors.orange.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20.r),
                                   ),
-                                  child: Icon(Icons.pets, size: 100.sp, color: Colors.orange.withOpacity(0.5)),
+                                  child: Icon(
+                                    Icons.pets,
+                                    size: 100.sp,
+                                    color: Colors.orange.withOpacity(0.5),
+                                  ),
                                 ),
                               ),
                             ),
@@ -117,56 +115,79 @@ class IntroScreen5 extends StatelessWidget {
                         ),
                       ),
 
-                      SizedBox(height: 30.h),
+                      Container(
+                        //  height: 280.h,
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 20.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(30, 29, 32, 1),
+                          borderRadius: BorderRadius.circular(24.r),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Page Indicators
+                            Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildDot(controller.currentPage.value == 0),
+                                  SizedBox(width: 8.w),
+                                  _buildDot(controller.currentPage.value == 1),
+                                ],
+                              ),
+                            ),
 
-                      // Page Indicators
-                      Obx(() => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildDot(controller.currentPage.value == 0),
-                          SizedBox(width: 8.w),
-                          _buildDot(controller.currentPage.value == 1),
-                        ],
-                      )),
+                            SizedBox(height: 16.h),
 
-                      const Spacer(),
+                            // Animated Content
+                            Obx(
+                              () => AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: controller.currentPage.value == 0
+                                    ? _buildSubscriptionContent(controller)
+                                    : _buildReferralContent(controller),
+                              ),
+                            ),
 
-                      // Animated Content Switcher
-                      Obx(() => AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: controller.currentPage.value == 0
-                            ? _buildSubscriptionContent(controller)
-                            : _buildReferralContent(controller),
-                      )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => print('Terms of Service tapped'),
+                                  child: Text(
+                                    'Terms of Service',
+                                    style: sfProText400(
+                                      12.sp,
+                                      Color.fromRGBO(235, 235, 245, 0.6),
+
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 20.w),
+                                GestureDetector(
+                                  onTap: () => print('Restore Purchase tapped'),
+                                  child: Text(
+                                    'Restore Purchase',
+                                    style: sfProText400(
+                                      12.sp,
+                                      Color.fromRGBO(235, 235, 245, 0.6),
+
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-
-                SizedBox(height: 20.h),
-
-                // Terms & Restore
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => print('Terms of Service tapped'),
-                      child: Text(
-                        'Terms of Service',
-                        style: sfProText400(13.sp, Colors.white.withOpacity(0.6)),
-                      ),
-                    ),
-                    SizedBox(width: 20.w),
-                    GestureDetector(
-                      onTap: () => print('Restore Purchase tapped'),
-                      child: Text(
-                        'Restore Purchase',
-                        style: sfProText400(13.sp, Colors.white.withOpacity(0.6)),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 30.h),
               ],
             ),
           ),
@@ -178,7 +199,7 @@ class IntroScreen5 extends StatelessWidget {
   Widget _buildDot(bool isActive) {
     return Container(
       width: 32.w,
-      height: 4.h,
+      height: 6.h,
       decoration: BoxDecoration(
         color: isActive ? Colors.white : Colors.white.withOpacity(0.3),
         borderRadius: BorderRadius.circular(2.r),
@@ -187,95 +208,122 @@ class IntroScreen5 extends StatelessWidget {
   }
 
   Widget _buildSubscriptionContent(IntroScreen5Controller c) {
-    return Padding(
-      key: const ValueKey('subscription'),
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Monthly Plan
-          GestureDetector(
-            onTap: () => c.selectPlan(0),
-            child: Obx(() => _planCard(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Monthly Plan
+        GestureDetector(
+          onTap: () => c.selectPlan(0),
+          child: Obx(
+            () => _planCard(
               isSelected: c.selectedPlan.value == 0,
               title: 'Monthly',
               price: '£4.99/month',
               showCheck: c.selectedPlan.value == 0,
-            )),
+            ),
           ),
+        ),
 
-          SizedBox(height: 16.h),
+        SizedBox(height: 13.h),
 
-          // Yearly Plan (Most Popular)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              GestureDetector(
-                onTap: () => c.selectPlan(1),
-                child: Obx(() => _planCard(
-                  isSelected: c.selectedPlan.value == 1,
-                  title: 'Year',
-                  price: '£2.99/month',
-                  showCheck: true,
-                  isYearly: true,
-                )),
-              ),
-              Positioned(
-                top: -10.h,
+        // Yearly Plan (Most Popular)
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: EdgeInsets.only(
                 left: 16.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [Color(0xFFE8B87E), Color(0xFFD4A574)]),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Text(
-                    'MOST POPULAR',
-                    style: sfProText500(11.sp, Colors.white),
-                  ),
-                ),
+                top: 35.h,
+                right: 16.w,
+                bottom: 20.h,
               ),
-            ],
-          ),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(47, 46, 51, 1),
+                borderRadius: BorderRadius.circular(18.r),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 21.h,
+                    width: 21.w,
+                    child: Image.asset('assets/images/tick.png'),
+                  ),
+                  SizedBox(width: 12.w),
+                  Text('Year', style: sfProText600(17.sp, Colors.white)),
+                  const Spacer(),
+                  Text('£2.99/month', style: sfProText600(17.sp, Colors.white)),
+                ],
+              ),
+            ),
+            Positioned(
+              top: -2.h,
 
-          SizedBox(height: 4.h),
+              child: Container(
+                height: 29.h,
+                width: 110.w,
 
-          // Start Trial Button
-          Obx(() => GestureDetector(
+                child: Image.asset('assets/images/mostPopular.png'),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 14.h),
+
+        // Start Trial Button
+        Obx(
+          () => GestureDetector(
             onTap: c.isLoading.value ? null : c.startTrial,
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 18.h),
+              height: 52.h,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFFE8B87E), Color(0xFFD4A574)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(28.r),
+                borderRadius: BorderRadius.circular(36.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFC107).withOpacity(0.35),
+                    blurRadius: 16,
+                    spreadRadius: 5,
+                  ),
+                ],
               ),
-              child: c.isLoading.value
-                  ? const Center(
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
+              child: Center(
+                child: c.isLoading.value
+                    ? SizedBox(
+                  width: 24.w,
+                  height: 24.w,
+                  child: const CircularProgressIndicator(
                     strokeWidth: 2.5,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
+                )
+                    : RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Start Free Trial\n',
+                        style: sfProText600(17.sp, Colors.white),
+                      ),
+                      TextSpan(
+                        text: 'then £52.99/year',
+                        style: sfProText400(12.sp, Color.fromRGBO(0, 0, 0, 0.6)), // different color & style
+                      ),
+                    ],
+                  ),
                 ),
               )
-                  : Column(
-                children: [
-                  Text('Start Free Trial', style: sfProText600(12.sp, Colors.white)),
-                  SizedBox(height: 2.h),
-                  Text('then £52.99/year', style: sfProText400(13.sp, Colors.white.withOpacity(0.8))),
-                ],
-              ),
+
             ),
-          )),
-        ],
-      ),
+          ),
+        ),
+        SizedBox(height: 13.h),
+      ],
     );
   }
 
@@ -287,41 +335,22 @@ class IntroScreen5 extends StatelessWidget {
     bool isYearly = false,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: isSelected ? Colors.white.withOpacity(0.3) : Colors.white.withOpacity(0.1),
-          width: 1.5,
-        ),
+        color: Color.fromRGBO(47, 46, 51, 1),
+        borderRadius: BorderRadius.circular(18.r),
       ),
       child: Row(
         children: [
-          Container(
-            width: 28.w,
-            height: 28.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isYearly ? Colors.white : null,
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-            ),
-            child: showCheck
-                ? Center(
-              child: isYearly
-                  ? Icon(Icons.check, color: const Color(0xFF2D2D2D), size: 18.sp)
-                  : Container(
-                width: 14.w,
-                height: 14.w,
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              ),
-            )
-                : null,
+          SizedBox(
+            height: 21.h,
+            width: 21.w,
+            child: Image.asset('assets/icons/loader_icon.png'),
           ),
-          SizedBox(width: 16.w),
-          Text(title, style: sfProText500(18.sp, Colors.white)),
+          SizedBox(width: 12.w),
+          Text(title, style: sfProText600(17.sp, Colors.white)),
           const Spacer(),
-          Text(price, style: sfProText500(18.sp, Colors.white)),
+          Text(price, style: sfProText600(17.sp, Colors.white)),
         ],
       ),
     );
@@ -330,20 +359,27 @@ class IntroScreen5 extends StatelessWidget {
   Widget _buildReferralContent(IntroScreen5Controller c) {
     return Padding(
       key: const ValueKey('referral'),
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Invite a friend and receive',
-            style: sfProDisplay600(22.sp, Colors.white),
+            style: sfProText600(17.sp, Colors.white),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 16.h),
+          Container(
+            height: 1.h,
+            color: const Color(0xFF2C2C2E),
+          ),
+          SizedBox(height: 16.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('👏', style: TextStyle(fontSize: 32.sp)),
+              SizedBox(
+                  height: 20.h,
+                  child: Image.asset('assets/images/clap.png')),
               SizedBox(width: 12.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,29 +391,40 @@ class IntroScreen5 extends StatelessWidget {
                         shaderCallback: (bounds) => const LinearGradient(
                           colors: [Color(0xFFE8B87E), Color(0xFFE89B7E)],
                         ).createShader(bounds),
-                        child: Text('1 month Free', style: sfProText600(18.sp, Colors.white)),
+                        child: Text(
+                          '1 month Free',
+                          style: sfProText600(18.sp, Colors.white),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
-              SizedBox(width: 12.w),
-              Text('1 time', style: sfProText400(16.sp, Colors.grey.shade500)),
+              Spacer(),
+              Text('1 time', style: sfProText600(17.sp, Color.fromRGBO(235, 235, 245, 0.3))),
+
             ],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
           GestureDetector(
             onTap: c.copyLink,
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 18.h),
+              height: 52.h,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFFE8B87E), Color(0xFFD4A574)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(28.r),
+                borderRadius: BorderRadius.circular(36.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFC107).withOpacity(0.35),
+                    blurRadius: 16,
+                    spreadRadius: 5,
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -395,7 +442,6 @@ class IntroScreen5 extends StatelessWidget {
   }
 }
 
-
 class IntroScreen5Controller extends GetxController {
   // Observable variables
   var isLoading = false.obs;
@@ -405,13 +451,21 @@ class IntroScreen5Controller extends GetxController {
   final PageController pageController = PageController(initialPage: 0);
 
   void startTrial() async {
+    if (isLoading.value) return; // Prevent double tap
+
     isLoading(true);
+
     await Future.delayed(const Duration(seconds: 3));
+
     isLoading(false);
 
     String plan = selectedPlan.value == 0 ? "Monthly" : "Yearly";
     print('Trial started with plan: $plan');
+
+    // Navigate to Home Screen
+    Get.offAll(() => const HomeScreen2());
   }
+
 
   void copyLink() {
     print('Link copied to clipboard');

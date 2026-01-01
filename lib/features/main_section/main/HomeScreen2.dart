@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
 import 'package:second_chat/features/main_section/main/HomeScreen.dart';
@@ -54,7 +55,7 @@ class HomeScreen2 extends StatelessWidget {
                   // Offline Button
                   GestureDetector(
                     onTap: (){
-                      Get.to(StreamScreen());
+                      Get.to(Livestreaming());
                     },
                     child: _buildImageButton(
                       'assets/images/offline.png',

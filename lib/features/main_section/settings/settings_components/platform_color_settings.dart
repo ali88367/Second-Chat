@@ -50,19 +50,22 @@ class _PlatformColorSettingsState extends State<PlatformColorSettings> {
 
     return Column(
           children: [
-            // Top bar: Twitch button + 3 dots
-            // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(back_arrow_icon, height: 44.h),
-                Text(
-                  "Platform Color",
-                  style: sfProDisplay600(17.sp, onDark),
-                ),
-                SizedBox(width: 44.w),
-              ],
+
+            SizedBox(height: 20.h,),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 8.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(back_arrow_icon, height: 44.h),
+                  Text(
+                    "Platform Color",
+                    style: sfProDisplay600(17.sp, onDark),
+                  ),
+                  SizedBox(width: 44.w),
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
@@ -138,7 +141,7 @@ class _PlatformColorSettingsState extends State<PlatformColorSettings> {
                 padding: EdgeInsets.all(24.w),
                 decoration: BoxDecoration(
                   color: onBottomSheetGrey,
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(30.r),
                 ),
                 child: Column(
                   children: [

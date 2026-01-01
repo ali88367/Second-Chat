@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:second_chat/features/intro/intro_screen1.dart';
-import 'package:second_chat/features/main_section/main/HomeScreen.dart';
-import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/constants/constants.dart';
-import 'features/test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -173,7 +169,6 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: backgroundDark,
           ),
 
-          // Initial Screen - Using direct widget reference (no string routes)
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
           home:  IntroScreen1(),
 
