@@ -6,6 +6,7 @@ import 'package:second_chat/features/intro/intro_screen1.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/constants/constants.dart';
+import 'notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -170,7 +171,7 @@ class MyApp extends StatelessWidget {
           ),
 
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home:  IntroScreen1(),
+          home:  EdgeGlowNotificationPage(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,
