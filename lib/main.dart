@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/features/intro/intro_screen1.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
 import 'core/constants/app_colors/app_colors.dart';
@@ -171,7 +172,7 @@ class MyApp extends StatelessWidget {
           ),
 
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home:  EdgeGlowNotificationPage(),
+          home:  Livestreaming(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,

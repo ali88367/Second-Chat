@@ -9,8 +9,23 @@ import 'core/constants/app_images/app_images.dart';
 import 'core/themes/textstyles.dart';
 import 'features/main_section/main/HomeScreen.dart';
 
-class Livestreaming extends StatelessWidget {
+class Livestreaming extends StatefulWidget {
   const Livestreaming({super.key});
+
+  @override
+  State<Livestreaming> createState() => _LivestreamingState();
+}
+
+class _LivestreamingState extends State<Livestreaming> {
+  final ValueNotifier<bool> _showServiceCard = ValueNotifier<bool>(false);
+  final ValueNotifier<String?> _selectedPlatform = ValueNotifier<String?>(null);
+
+  @override
+  void dispose() {
+    _showServiceCard.dispose();
+    _selectedPlatform.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,138 +103,347 @@ class Livestreaming extends StatelessWidget {
                 children: [
                   SizedBox(height: 122.h),
 
-                  Container(
-                    height: 236.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.r),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24.r),
-                      child: Opacity(
-                        opacity: 1,
-                        child: Image.asset(
-                          'assets/images/streaming.png', // replace with your placeholder image path
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _showServiceCard,
+                    builder: (context, showCard, child) {
+                      if (showCard) {
+                        return ValueListenableBuilder<String?>(
+                          valueListenable: _selectedPlatform,
+                          builder: (context, platform, _) {
+                            if (platform != null) {
+                              final asset = platform == 'twitch'
+                                  ? 'assets/images/twitch.png'
+                                  : platform == 'kick'
+                                      ? 'assets/images/kick.png'
+                                      : 'assets/images/youtube.png';
+
+                              // Platform panel (matches attached design)
+                              return Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(22, 21, 24, 1),
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        // top bar with back and centered logo
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  _selectedPlatform.value = null;
+                                                  _showServiceCard.value = false;
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.all(8.w),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(Icons.arrow_back_ios, color: Colors.white, size: 16.sp),
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Container(
+                                                width: 40.w,
+                                                height: 40.w,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius: BorderRadius.circular(12.r),
+                                                ),
+                                                child: Center(child: Image.asset(asset, width: 22.w, height: 22.h)),
+                                              ),
+                                              const Spacer(),
+                                              SizedBox(width: 40.w),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 16.h),
+
+                                        // Two large rows: Title Example & Name Category
+                                        _panelRow('Title Example'),
+                                        SizedBox(height: 12.h),
+                                        _panelRow('Name Category', showChevron: true, onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            backgroundColor: Colors.transparent,
+                                            builder: (ctx) {
+                                              return FractionallySizedBox(
+                                                heightFactor: 0.94,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade900,
+                                                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+                                                  ),
+                                                  child: Stack(
+                                                    children: [
+                                                      Column(
+                                                        children: [
+                                                          SizedBox(height: 10.h),
+                                                          // Top handle + header
+                                                          Padding(
+                                                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                                            child: Row(
+                                                              children: [
+                                                                GestureDetector(
+                                                                  onTap: () => Navigator.of(ctx).pop(),
+                                                                  child: Container(
+                                                                    padding: EdgeInsets.all(8.w),
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors.black,
+                                                                      shape: BoxShape.circle,
+                                                                    ),
+                                                                    child: Icon(Icons.arrow_back_ios, color: Colors.white, size: 18.sp),
+                                                                  ),
+                                                                ),
+                                                                const Spacer(),
+                                                                Text('Category', style: sfProText600(18.sp, Colors.white)),
+                                                                const Spacer(),
+                                                                SizedBox(width: 40.w),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 12.h),
+                                                          Expanded(
+                                                            child: ListView.separated(
+                                                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                                              itemCount: 14,
+                                                              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                                                              itemBuilder: (c, i) {
+                                                                return InkWell(
+                                                                  onTap: () {},
+                                                                  borderRadius: BorderRadius.circular(28.r),
+                                                                  child: Container(
+                                                                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+                                                                    decoration: BoxDecoration(
+                                                                      color: Color.fromRGBO(30, 29, 32, 1),
+                                                                      borderRadius: BorderRadius.circular(28.r),
+                                                                    ),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text('Name Category', style: sfProText400(16.sp, Colors.white)),
+                                                                        const Spacer(),
+                                                                        Container(
+                                                                          width: 36.w,
+                                                                          height: 36.w,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.black,
+                                                                            borderRadius: BorderRadius.circular(18.r),
+                                                                          ),
+                                                                          child: Icon(Icons.arrow_forward_ios, color: Colors.grey.shade500, size: 16.sp),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 18.h,
+                                                        left: 24.w,
+                                                        right: 24.w,
+                                                        child: Container(
+                                                          height: 56.h,
+                                                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.black,
+                                                            borderRadius: BorderRadius.circular(28.r),
+                                                          ),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(Icons.search, color: Colors.white, size: 22.sp),
+                                                              SizedBox(width: 12.w),
+                                                              Expanded(
+                                                                child: Text('Search', style: sfProText400(18.sp, Colors.white.withOpacity(0.6))),
+                                                              ),
+                                                              SizedBox(width: 8.w),
+                                                              Icon(Icons.mic, color: Colors.white, size: 22.sp),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  // counters
+                                  Container(
+                                    width: 297.w,
+                                    height: 59.4.h,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(30, 29, 32, 1),
+                                      borderRadius: BorderRadius.circular(33.r),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        _counterPill(
+                                          asset: 'assets/images/twitch.png',
+                                          count: '11202',
+                                          color: Color.fromRGBO(185, 80, 239, 1),
+                                          bgColor: Color.fromRGBO(185, 80, 239, 0.25),
+                                        ),
+                                        SizedBox(width: 13.2.w),
+                                        _counterPill(
+                                          asset: 'assets/images/kick.png',
+                                          count: '1256',
+                                          color: Color.fromRGBO(83, 252, 24, 1),
+                                          bgColor: Color.fromRGBO(83, 252, 24, 0.25),
+                                        ),
+                                        SizedBox(width: 13.2.w),
+                                        _counterPill(
+                                          asset: 'assets/images/youtube.png',
+                                          count: '256',
+                                          color: Color.fromRGBO(221, 44, 40, 1),
+                                          bgColor: Color.fromRGBO(221, 44, 40, 0.25),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            // no platform selected: show service list
+                            return Column(
+                              children: [
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(22, 21, 24, 1),
+                                        borderRadius: BorderRadius.circular(20.r),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          _serviceRow(
+                                            asset: 'assets/images/twitch.png',
+                                            title: 'Title',
+                                            subtitle: 'Category',
+                                            onTap: () => _selectedPlatform.value = 'twitch',
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          _serviceRow(
+                                            asset: 'assets/images/kick.png',
+                                            title: 'Title',
+                                            subtitle: 'Category',
+                                            onTap: () => _selectedPlatform.value = 'kick',
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          _serviceRow(
+                                            asset: 'assets/images/youtube.png',
+                                            title: 'Title',
+                                            subtitle: 'Category',
+                                            onTap: () => _selectedPlatform.value = 'youtube',
+                                          ),
+                                          SizedBox(height: 36.h),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 6.h,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(20, 18, 20, 1),
+                                          borderRadius: BorderRadius.circular(20.r),
+                                          border: Border.all(color: Colors.white10, width: 1.w),
+                                        ),
+                                        child: Text(
+                                          'Update All',
+                                          style: sfProText400(14.sp, Color.fromRGBO(238, 218, 172, 1)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12.h),
+                                Container(
+                                  width: 297.w,
+                                  height: 59.4.h,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(30, 29, 32, 1),
+                                    borderRadius: BorderRadius.circular(33.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _counterPill(
+                                        asset: 'assets/images/twitch.png',
+                                        count: '11202',
+                                        color: Color.fromRGBO(185, 80, 239, 1),
+                                        bgColor: Color.fromRGBO(185, 80, 239, 0.25),
+                                      ),
+                                      SizedBox(width: 13.2.w),
+                                      _counterPill(
+                                        asset: 'assets/images/kick.png',
+                                        count: '1256',
+                                        color: Color.fromRGBO(83, 252, 24, 1),
+                                        bgColor: Color.fromRGBO(83, 252, 24, 0.25),
+                                      ),
+                                      SizedBox(width: 13.2.w),
+                                      _counterPill(
+                                        asset: 'assets/images/youtube.png',
+                                        count: '256',
+                                        color: Color.fromRGBO(221, 44, 40, 1),
+                                        bgColor: Color.fromRGBO(221, 44, 40, 0.25),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
+                      // default: image placeholder
+                      return Column(
+                        children: [
+                          Container(
+                            height: 236.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24.r),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24.r),
+                              child: Opacity(
+                                opacity: 1,
+                                child: Image.asset(
+                                  'assets/images/streaming.png', // replace with your placeholder image path
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
                   ),
-                  SizedBox(height: 12.h),
-                  Container(
-                    width: 297.w, // 270 + 10%
-                    height: 59.4.h, // 54 + 10%
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(30, 29, 32, 1),
-                      borderRadius: BorderRadius.circular(33.r), // 30 + 10%
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Twitch Container
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15.w,
-                          ), // 8 + 10%
-                          height: 38.5.h, // 35 + 10%
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(185, 80, 239, 0.25),
-                            borderRadius: BorderRadius.circular(
-                              70.4.r,
-                            ), // 64 + 10%
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  'assets/images/twitch.png',
-                                  color: Color.fromRGBO(185, 80, 239, 1),
-                                  width: 12.1.w, // 11 + 10%
-                                  height: 12.1.h, // 11 + 10%
-                                ),
-                                SizedBox(width: 4.4.w), // 4 + 10%
-                                Text(
-                                  '11202',
-                                  style: sfProText400(
-                                    14.3.sp, // 13 + 10%
-                                    Color.fromRGBO(185, 80, 239, 1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(width: 13.2.w), // 12 + 10%
-                        // Kick Container
-                        Container(
-                          padding: EdgeInsets.all(8.8),
-                          height: 38.5.h,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(83, 252, 24, 0.25),
-                            borderRadius: BorderRadius.circular(70.4.r),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  'assets/images/kick.png',
-                                  color: Color.fromRGBO(83, 252, 24, 1),
-                                  width: 12.1.w,
-                                  height: 12.1.h,
-                                ),
-                                SizedBox(width: 4.4.w),
-                                Text(
-                                  '1256',
-                                  style: sfProText400(
-                                    14.3.sp,
-                                    Color.fromRGBO(83, 252, 24, 1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(width: 13.2.w),
-
-                        // YouTube Container
-                        Container(
-                          padding: EdgeInsets.all(8.8),
-                          height: 38.5.h,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(221, 44, 40, 0.25),
-                            borderRadius: BorderRadius.circular(70.4.r),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  'assets/images/youtube.png',
-                                  color: Color.fromRGBO(221, 44, 40, 1),
-                                  width: 12.1.w,
-                                  height: 12.1.h,
-                                ),
-                                SizedBox(width: 4.4.w),
-                                Text(
-                                  '256',
-                                  style: sfProText400(
-                                    14.3.sp,
-                                    Color.fromRGBO(221, 44, 40, 1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
 
                   SizedBox(height: 12.h),
-                  const Expanded(child: _ChatBottomSection()),
+                  Expanded(child: _ChatBottomSection(showServiceCard: _showServiceCard)),
                 ],
               ),
             ),
@@ -244,7 +468,9 @@ class Livestreaming extends StatelessWidget {
 }
 
 class _ChatBottomSection extends StatelessWidget {
-  const _ChatBottomSection();
+  final ValueNotifier<bool> showServiceCard;
+
+  const _ChatBottomSection({required this.showServiceCard});
 
   static const List<String> platforms = [
     'assets/images/twitch1.png',
@@ -399,10 +625,18 @@ class _ChatBottomSection extends StatelessWidget {
                   assetPath: 'assets/images/line.png',
                 ),
                 SizedBox(width: 12.w),
-                _pillButton(
-                  "Title",
-                  isActive: false,
-                  assetPath: 'assets/images/magic.png',
+                ValueListenableBuilder<bool>(
+                  valueListenable: showServiceCard,
+                  builder: (context, val, _) {
+                    return GestureDetector(
+                      onTap: () => showServiceCard.value = !showServiceCard.value,
+                      child: _pillButton(
+                        "Title",
+                        isActive: val,
+                        assetPath: 'assets/images/magic.png',
+                      ),
+                    );
+                  },
                 ),
                 const Spacer(),
                 SizedBox(width: 12.w),
@@ -512,35 +746,7 @@ class _ChatBottomSection extends StatelessWidget {
     );
   }
 
-  Widget _pillButton(String text, {required bool isActive, String? assetPath}) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: isActive ? const Color(0xFF1E1E1E) : Colors.transparent,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: isActive ? Colors.transparent : Colors.grey.shade800,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (assetPath != null) ...[
-            Image.asset(assetPath, width: 16.w, height: 16.h),
-            SizedBox(width: 6.w),
-          ],
-          Text(
-            text,
-            style: TextStyle(
-              color: isActive ? Colors.white : Colors.grey.shade600,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
   Widget _chatItem(
     String platform,
@@ -572,4 +778,147 @@ class _ChatBottomSection extends StatelessWidget {
       ),
     );
   }
+}
+
+
+
+// Top-level helpers so both widgets can reuse them
+Widget _serviceRow({required String asset, required String title, required String subtitle, VoidCallback? onTap}) {
+  final row = Container(
+    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+    decoration: BoxDecoration(
+      color: Color.fromRGBO(30, 29, 32, 1),
+      borderRadius: BorderRadius.circular(16.r),
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 36.w,
+          height: 36.w,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Center(
+            child: Image.asset(asset, width: 18.w, height: 18.h),
+          ),
+        ),
+        SizedBox(width: 12.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: sfProText600(14.sp, Colors.white)),
+            SizedBox(height: 2.h),
+            Text(subtitle, style: sfProText400(12.sp, Colors.grey.shade500)),
+          ],
+        ),
+        const Spacer(),
+        Container(
+          width: 36.w,
+          height: 36.w,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(18.r),
+          ),
+          child: Icon(Icons.arrow_forward_ios, color: Colors.grey.shade500, size: 16.sp),
+        ),
+      ],
+    ),
+  );
+
+  if (onTap != null) {
+    return GestureDetector(onTap: onTap, child: row);
+  }
+
+  return row;
+}
+
+Widget _counterPill({required String asset, required String count, required Color color, required Color bgColor}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 15.w),
+    height: 38.5.h,
+    decoration: BoxDecoration(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(70.4.r),
+    ),
+    child: Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(asset, color: color, width: 12.1.w, height: 12.1.h),
+          SizedBox(width: 4.4.w),
+          Text(count, style: sfProText400(14.3.sp, color)),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _panelRow(String text, {bool showChevron = false, VoidCallback? onTap}) {
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+    decoration: BoxDecoration(
+      color: Color.fromRGBO(30, 29, 32, 1),
+      borderRadius: BorderRadius.circular(28.r),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: onTap,
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  style: sfProText600(16.sp, Colors.white),
+                ),
+                const Spacer(),
+                if (showChevron)
+                  Container(
+                    width: 36.w,
+                    height: 36.w,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(18.r),
+                    ),
+                    child: Icon(Icons.arrow_forward_ios, color: Colors.grey.shade500, size: 16.sp),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _pillButton(String text, {required bool isActive, String? assetPath}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+    decoration: BoxDecoration(
+      color: isActive ? const Color(0xFF1E1E1E) : Colors.transparent,
+      borderRadius: BorderRadius.circular(20.r),
+      border: Border.all(
+        color: isActive ? Colors.transparent : Colors.grey.shade800,
+      ),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (assetPath != null) ...[
+          Image.asset(assetPath, width: 16.w, height: 16.h),
+          SizedBox(width: 6.w),
+        ],
+        Text(
+          text,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.grey.shade600,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
+  );
 }
