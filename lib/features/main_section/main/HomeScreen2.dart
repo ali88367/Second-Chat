@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
+import 'package:second_chat/features/Streaks/Streaksbottomsheet.dart';
 import 'package:second_chat/features/main_section/main/HomeScreen.dart';
+import 'package:second_chat/features/main_section/stream/StreamStreak1.dart';
 import 'package:second_chat/features/main_section/stream/stream_screen.dart';
 
 import '../settings/settings_bottomsheet_column.dart';
@@ -266,10 +268,31 @@ SizedBox(width: 10.w,),
                     ),
                   ),
                   _buildDivider(),
-                  _buildMenuItem(
-                    imagePath: 'assets/images/calendar.png',
-                    title: 'Customizable Streaks',
-                    hasArrow: true,
+                  InkWell(
+                    onTap: (){
+                      Get.bottomSheet(
+                          isDismissible: true,
+                          isScrollControlled: true,
+                          enableDrag: true,
+                          Container(
+                            height: Get.height * .9,
+                            decoration: BoxDecoration(
+                              color: bottomSheetGrey,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(18.r),
+                                topLeft: Radius.circular(18.r),
+                              ),
+                            ),
+                            child: StreamStreakSetupBottomSheet(),
+                          ));
+
+                    },
+                    child: _buildMenuItem(
+                      imagePath: 'assets/images/calendar.png',
+                      title: 'Customizable Streaks',
+                      hasArrow: true,
+                      
+                    ),
                   ),
                 ],
               ),
