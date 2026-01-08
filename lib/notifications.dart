@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class EdgeGlowNotificationPage extends StatefulWidget {
   const EdgeGlowNotificationPage({super.key});
@@ -9,8 +11,7 @@ class EdgeGlowNotificationPage extends StatefulWidget {
       _EdgeGlowNotificationPageState();
 }
 
-class _EdgeGlowNotificationPageState
-    extends State<EdgeGlowNotificationPage>
+class _EdgeGlowNotificationPageState extends State<EdgeGlowNotificationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -22,9 +23,10 @@ class _EdgeGlowNotificationPageState
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1800),
     );
   }
 
@@ -34,19 +36,44 @@ class _EdgeGlowNotificationPageState
     super.dispose();
   }
 
-  /// Platform → Glow Color
-  Color _platformGlowColor() {
+  List<Color> _platformGlowColors() {
     switch (currentPlatform) {
       case StreamPlatform.twitch:
-        return const Color(0xFF9146FF); // Purple
+        return const [
+          Color(0xFF9B5CFF),
+          Color(0xFFFF4FD8),
+          Color(0xFF00E5FF),
+          Color(0xFF6E7BFF),
+        ];
       case StreamPlatform.kick:
-        return const Color(0xFF00E701); // Green
+        return const [
+         Color(0xFF00FF87), // Soft neon green
+  Color(0xFF2BFF00), // Electric green
+  Color(0xFF00E6A8), // Teal-green glow
+  Color(0xFF7CFF3A), // Apple-style lime
+  Color(0xFF00FF5A), // Bright pulse green
+        ];
       case StreamPlatform.youtube:
-        return const Color(0xFFFF0000); // Red
+        return const [
+          Color(0xFFFF1744),
+          Color(0xFFFF5252),
+          Color(0xFFFFD740),
+          Color(0xFFFF0000),
+        ];
     }
   }
 
-  /// Trigger notification + glow
+  Color _platformMainColor() {
+    switch (currentPlatform) {
+      case StreamPlatform.twitch:
+        return const Color(0xFF9146FF);
+      case StreamPlatform.kick:
+        return const Color(0xFF00E701);
+      case StreamPlatform.youtube:
+        return const Color(0xFFFF0000);
+    }
+  }
+
   Future<void> triggerNotification(StreamPlatform platform) async {
     setState(() {
       currentPlatform = platform;
@@ -54,19 +81,19 @@ class _EdgeGlowNotificationPageState
       showNotification = true;
     });
 
-    _controller.repeat(reverse: true);
+    _controller.repeat();
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 4));
 
     _controller.stop();
     _controller.reset();
 
-    if (mounted) {
-      setState(() {
-        showGlow = false;
-        showNotification = false;
-      });
-    }
+    if (!mounted) return;
+
+    setState(() {
+      showGlow = false;
+      showNotification = false;
+    });
   }
 
   @override
@@ -75,9 +102,7 @@ class _EdgeGlowNotificationPageState
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
-          alignment: Alignment.topCenter,
           children: [
-            /// MAIN CONTENT
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -89,26 +114,26 @@ class _EdgeGlowNotificationPageState
               ),
             ),
 
-            /// NOTIFICATION CARD
-            if (showNotification) Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 40.w,vertical: 40.h),
-              child: _notificationCard(),
-            ),
-        
-            /// EDGE GLOW
+            if (showNotification)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 40.h),
+                child: _notificationCard(),
+              ),
+
             if (showGlow)
-              IgnorePointer(
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (_, __) {
-                    return CustomPaint(
-                      size: MediaQuery.of(context).size,
-                      painter: EdgeGlowPainter(
-                        animationValue: _controller.value,
-                        glowColor: _platformGlowColor(),
-                      ),
-                    );
-                  },
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (_, __) {
+                      return CustomPaint(
+                        painter: SiriEdgeGlowPainter(
+                          progress: _controller.value,
+                          colors: _platformGlowColors(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
           ],
@@ -128,118 +153,116 @@ class _EdgeGlowNotificationPageState
   }
 
   Widget _notificationCard() {
-    final platformColor = _platformGlowColor();
+    final platformColor = _platformMainColor();
 
-    return Positioned(
-      top: 120,
-      child: Container(
-        width: 340,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              platformColor.withOpacity(0.35), // soft accent
-              const Color(0xFF141414),          // deep charcoal
-              const Color(0xFF0B0B0B),          // near-black
-            ],
-            stops: const [0.0, 0.45, 1.0],
-          ),
-          border: Border.all(
-            color: platformColor.withOpacity(0.35),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: platformColor.withOpacity(0.15),
-              ),
-              padding: const EdgeInsets.all(6),
-              child: Image.asset(
-                _platformIcon(),
-                fit: BoxFit.contain,
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                "SuperFan sent you a message",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  height: 1.3,
-                ),
-              ),
-            ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            platformColor.withOpacity(0.35),
+            const Color(0xFF121212),
           ],
         ),
+        border: Border.all(
+          color: platformColor.withOpacity(0.35),
+        ),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: platformColor.withOpacity(0.2),
+            child: const Icon(Icons.notifications, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              "SuperFan sent you a message",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  String _platformIcon() {
-    switch (currentPlatform) {
-      case StreamPlatform.twitch:
-        return 'assets/images/twitch.png';
-      case StreamPlatform.kick:
-        return 'assets/images/kick.png';
-      case StreamPlatform.youtube:
-        return 'assets/images/youtube.png';
-    }
-  }
 }
 
-/// PLATFORM ENUM
 enum StreamPlatform { twitch, kick, youtube }
 
-/// EDGE GLOW PAINTER (CONTINUOUS ANTI-CLOCKWISE)
-class EdgeGlowPainter extends CustomPainter {
-  final double animationValue; // 0.0 → 1.0
-  final Color glowColor;
+/// ================= SIRI STYLE EDGE GLOW =================
 
-  EdgeGlowPainter({
-    required this.animationValue,
-    required this.glowColor,
+class SiriEdgeGlowPainter extends CustomPainter {
+  final double progress;
+  final List<Color> colors;
+
+  SiriEdgeGlowPainter({
+    required this.progress,
+    required this.colors,
   });
 
+ @override
+void paint(Canvas canvas, Size size) {
+  // Fixed margin — NO expansion
+  const margin = 10.0;
+
+  final rect = Rect.fromLTWH(
+    margin,
+    margin,
+    size.width - margin * 2,
+    size.height - margin * 2,
+  );
+
+  final path = Path()
+    ..addRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(26)),
+    );
+
+  // Siri-style organic breathing
+  final breathing =
+      0.75 + (0.25 * sin(progress * pi * 2).abs());
+
+  // Continuous flowing colors
+  final gradient = SweepGradient(
+    colors: colors,
+    stops: List.generate(
+      colors.length,
+      (i) => i / (colors.length - 1),
+    ),
+    transform: GradientRotation(progress * pi * 2),
+  );
+
+  // OUTER DIFFUSED GLOW (reduce spread)
+final outerPaint = Paint()
+  ..style = PaintingStyle.stroke
+  ..strokeWidth = 20 * breathing       // smaller than before (was 30)
+  ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 25)  // smaller blur (was 45)
+  ..shader = gradient.createShader(rect)
+  ..color = Colors.white.withOpacity(0.45);
+
+// INNER CORE (slightly tighter)
+final innerPaint = Paint()
+  ..style = PaintingStyle.stroke
+  ..strokeWidth = 10 * breathing       // smaller than before (was 12)
+  ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10)  // tighter blur
+  ..shader = gradient.createShader(rect)
+  ..color = Colors.white.withOpacity(0.85);
+
+// SHARP INNER EDGE (definition stays almost the same)
+final sharpPaint = Paint()
+  ..style = PaintingStyle.stroke
+  ..strokeWidth = 2
+  ..shader = gradient.createShader(rect)
+  ..color = Colors.white.withOpacity(0.35);
+
+  canvas.drawPath(path, outerPaint);
+  canvas.drawPath(path, innerPaint);
+  canvas.drawPath(path, sharpPaint);
+}
+
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final double glowWidth = 30;
-
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final path = Path()
-      ..addRect(rect);
-
-    // Create a Paint with a shader along the perimeter
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = glowWidth
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, glowWidth / 2)
-      ..shader = SweepGradient(
-        startAngle: 0,
-        endAngle: 2 * 3.1415926,
-        colors: [
-          Colors.transparent,
-          glowColor.withOpacity(0.7),
-          glowColor.withOpacity(0.7),
-          Colors.transparent,
-        ],
-        stops: [0.0, 0.1, 0.3, 1.0],
-        transform: GradientRotation(animationValue * 2 * 3.1415926),
-      ).createShader(rect);
-
-    canvas.drawPath(path, paint);
+  bool shouldRepaint(covariant SiriEdgeGlowPainter oldDelegate) {
+    return oldDelegate.progress != progress;
   }
-
-  @override
-  bool shouldRepaint(covariant EdgeGlowPainter oldDelegate) => true;
 }
