@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
+import 'package:second_chat/features/Invite/Invite_screen.dart';
 import 'package:second_chat/features/Streaks/Streaksbottomsheet.dart';
 import 'package:second_chat/features/main_section/main/HomeScreen.dart';
 import 'package:second_chat/features/main_section/stream/StreamStreak1.dart';
@@ -236,10 +237,30 @@ SizedBox(width: 10.w,),
                     hasCheckbox: true,
                   ),
                   _buildDivider(),
-                  _buildMenuItem(
-                    imagePath: 'assets/images/signals.png',
-                    title: 'Add new stream service',
-                    hasArrow: true,
+                  InkWell(
+                    onTap: (){
+                      Get.bottomSheet(
+                          isDismissible: true,
+                          isScrollControlled: true,
+                          enableDrag: true,
+                          Container(
+                            height: Get.height * .9,
+                            decoration: BoxDecoration(
+                              color: bottomSheetGrey,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(18.r),
+                                topLeft: Radius.circular(18.r),
+                              ),
+                            ),
+                            child: InviteBottomSheet(),
+                          ));
+
+                    },
+                    child: _buildMenuItem(
+                      imagePath: 'assets/images/signals.png',
+                      title: 'Add new stream service',
+                      hasArrow: true,
+                    ),
                   ),
                   _buildDivider(),
                   InkWell(
