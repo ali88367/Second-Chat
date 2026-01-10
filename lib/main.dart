@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/features/intro/intro_screen1.dart';
+import 'package:second_chat/features/intro/intro_screen3.dart';
+import 'package:second_chat/features/intro/intro_screen4.dart';
+import 'package:second_chat/features/intro/intro_screen5.dart';
 import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
 import 'package:second_chat/features/main_section/stream/StreamStreak1.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
@@ -29,7 +32,6 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-
 
   Get.put(SettingsController());
 
@@ -66,7 +68,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(
               backgroundColor: background,
               elevation: 0,
-              iconTheme:  IconThemeData(color: textPrimary),
+              iconTheme: IconThemeData(color: textPrimary),
               centerTitle: true,
               systemOverlayStyle: SystemUiOverlayStyle.dark,
             ),
@@ -75,10 +77,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: primary,
                 foregroundColor: textInverse,
                 elevation: 2,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.w,
-                  vertical: 16.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -87,11 +86,8 @@ class MyApp extends StatelessWidget {
             outlinedButtonTheme: OutlinedButtonThemeData(
               style: OutlinedButton.styleFrom(
                 foregroundColor: primary,
-                side:  BorderSide(color: primary, width: 1.5),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.w,
-                  vertical: 16.h,
-                ),
+                side: BorderSide(color: primary, width: 1.5),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -100,10 +96,7 @@ class MyApp extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: primary,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: 12.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
                 ),
@@ -118,31 +111,24 @@ class MyApp extends StatelessWidget {
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide:  BorderSide(color: border),
+                borderSide: BorderSide(color: border),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide:  BorderSide(color: border),
+                borderSide: BorderSide(color: border),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide:  BorderSide(
-                  color: primary,
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: primary, width: 2),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide:  BorderSide(color: error),
+                borderSide: BorderSide(color: error),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide:  BorderSide(
-                  color: error,
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: error, width: 2),
               ),
-
             ),
             cardTheme: CardThemeData(
               color: card,
@@ -151,7 +137,7 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
             ),
-            dividerTheme:  DividerThemeData(
+            dividerTheme: DividerThemeData(
               color: divider,
               thickness: 1,
               space: 1,
@@ -188,4 +174,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

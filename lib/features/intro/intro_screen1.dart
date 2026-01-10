@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 import '../../core/constants/app_images/app_images.dart';
 import 'intro_screen2.dart';
 
-
-
 class IntroScreen1 extends StatelessWidget {
   const IntroScreen1({super.key});
 
@@ -69,7 +67,7 @@ class IntroScreen1 extends StatelessWidget {
             left: 16.w,
             right: 16.w,
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Get.to(IntroScreen2());
               },
               child: Container(

@@ -17,7 +17,7 @@ class IntroScreen4Controller extends GetxController {
     isLoading.value = true;
 
     // Show loading for 2 seconds
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     isLoading.value = false;
 
@@ -36,7 +36,6 @@ class IntroScreen4 extends StatefulWidget {
 class _IntroScreen4State extends State<IntroScreen4> {
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
-
 
   void _startTrial() async {
     setState(() {
@@ -72,19 +71,18 @@ class _IntroScreen4State extends State<IntroScreen4> {
               fit: BoxFit.cover,
             ),
           ),
-          Image.asset(
-            'assets/images/topbarshade.png',
-            fit: BoxFit.cover,
-          ),
-// Bottom shade (flipped)
+          Image.asset('assets/images/topbarshade.png', fit: BoxFit.cover),
 
+          // Bottom shade (flipped)
           SafeArea(
             child: Column(
               children: [
                 // Close Button
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: 10.w, vertical: 10.h),
+                    horizontal: 10.w,
+                    vertical: 10.h,
+                  ),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(
@@ -121,36 +119,34 @@ class _IntroScreen4State extends State<IntroScreen4> {
                           ),
                           TextSpan(
                             text: 'Premium',
-                            style: sfProDisplay600(
-                              34.sp,
-                              Colors
-                                  .white, // base color won't matter, overridden by foreground
-                            ).copyWith(
-                              foreground: Paint()
-                                ..shader = LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFF2B269), // yellow-orange
-                                    Color(0xFFF17A7A), // fully opaque red
-                                    Color(0xFFFFE6A7), // light yellow
-                                  ],
-                                  stops: [0.2, 0.5, 0.8],
-                                  // shift stops to give more space to red
-                                  transform: GradientRotation(
-                                      135.5 * 3.1415927 / 180),
-                                ).createShader(
-                                  Rect.fromLTWH(0, 0, 200, 50),
+                            style:
+                                sfProDisplay600(
+                                  34.sp,
+                                  Colors
+                                      .white, // base color won't matter, overridden by foreground
+                                ).copyWith(
+                                  foreground: Paint()
+                                    ..shader = LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Color(0xFFF2B269), // yellow-orange
+                                        Color(0xFFF17A7A), // fully opaque red
+                                        Color(0xFFFFE6A7), // light yellow
+                                      ],
+                                      stops: [0.2, 0.5, 0.8],
+                                      // shift stops to give more space to red
+                                      transform: GradientRotation(
+                                        135.5 * 3.1415927 / 180,
+                                      ),
+                                    ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
                                 ),
-                            ),
                           ),
-
                         ],
                       ),
                     ),
                   ],
                 ),
-
 
                 SizedBox(height: 30.h),
 
@@ -170,16 +166,31 @@ class _IntroScreen4State extends State<IntroScreen4> {
                               _buildGlassButton(),
                               SizedBox(height: 24.h),
                               _buildFeatureRow(
-                                  'Multi-Platform Chat', true, false),
+                                'Multi-Platform Chat',
+                                true,
+                                false,
+                              ),
                               _buildFeatureRow(
-                                  'Multi-Stream Monitor', false, true),
+                                'Multi-Stream Monitor',
+                                false,
+                                true,
+                              ),
                               _buildFeatureRow('Activity Feed', true, false),
                               _buildFeatureRow(
-                                  'Title/Category Manage', false, true),
+                                'Title/Category Manage',
+                                false,
+                                true,
+                              ),
                               _buildFeatureRow(
-                                  'Edge LED Notification', false, true),
+                                'Edge LED Notification',
+                                false,
+                                true,
+                              ),
                               _buildFeatureRow(
-                                  'Custom Notification', false, true),
+                                'Custom Notification',
+                                false,
+                                true,
+                              ),
                               // SizedBox(height: 100.h), // extra space for button
                             ],
                           ),
@@ -196,14 +207,14 @@ class _IntroScreen4State extends State<IntroScreen4> {
                           },
                         ),
                       ),
-                      SizedBox(width: 20.w,)
+                      SizedBox(width: 20.w),
                     ],
                   ),
                 ),
 
                 // Start Trial Button
                 Obx(
-                      () => GestureDetector(
+                  () => GestureDetector(
                     onTap: controller.isLoading.value
                         ? null
                         : controller.startTrial,
@@ -213,10 +224,7 @@ class _IntroScreen4State extends State<IntroScreen4> {
                       height: 56.h,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFE8B87E),
-                            Color(0xFFD4A574),
-                          ],
+                          colors: [Color(0xFFE8B87E), Color(0xFFD4A574)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -232,18 +240,19 @@ class _IntroScreen4State extends State<IntroScreen4> {
                       child: Center(
                         child: controller.isLoading.value
                             ? SizedBox(
-                          width: 24.w,
-                          height: 24.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
+                                width: 24.w,
+                                height: 24.w,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              )
                             : Text(
-                          'Start My 14 Day Free Trial',
-                          style: sfProText500(17.sp, Colors.white),
-                        ),
+                                'Start My 14 Day Free Trial',
+                                style: sfProText500(17.sp, Colors.white),
+                              ),
                       ),
                     ),
                   ),
@@ -258,7 +267,6 @@ class _IntroScreen4State extends State<IntroScreen4> {
     );
   }
 
-
   Widget _buildGlassButton() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(37), // Rounded corners
@@ -267,8 +275,7 @@ class _IntroScreen4State extends State<IntroScreen4> {
         child: Container(
           //  width: 250.w, // Fixed width
           height: 58.h, // Fixed height
-          padding: EdgeInsets.symmetric(horizontal: 16.w
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
             color: const Color.fromRGBO(48, 48, 48, 0.5), // rgba(48,48,48,0.5)
             borderRadius: BorderRadius.circular(37),
@@ -281,15 +288,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Feature's",
-                style: sfProText600(17.sp, Colors.white),
-              ),
-              Text(
-                'Free',
-                style: sfProText600(17.sp, Colors.white),
-              ),
-
+              Text("Feature's", style: sfProText600(17.sp, Colors.white)),
+              Text('Free', style: sfProText600(17.sp, Colors.white)),
             ],
           ),
         ),
@@ -307,10 +307,7 @@ class _IntroScreen4State extends State<IntroScreen4> {
             children: [
               Expanded(
                 flex: 3,
-                child: Text(
-                  feature,
-                  style: sfProText400(17.sp, Colors.white),
-                ),
+                child: Text(feature, style: sfProText400(17.sp, Colors.white)),
               ),
               Expanded(
                 flex: 1,
@@ -326,8 +323,9 @@ class _IntroScreen4State extends State<IntroScreen4> {
                     ),
                     child: Icon(
                       isFree ? Icons.check : Icons.close,
-                      color: isFree ? Colors.white : Colors.white.withOpacity(
-                          0.5),
+                      color: isFree
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.5),
                       size: 16.sp,
                     ),
                   ),
@@ -372,9 +370,10 @@ class _IntroScreen4State extends State<IntroScreen4> {
         children: [
           // Crown
           SizedBox(
-              height: 32.h,
-              width: 32.w,
-              child: Image.asset('assets/images/crown.png')),
+            height: 32.h,
+            width: 32.w,
+            child: Image.asset('assets/images/crown.png'),
+          ),
 
           SizedBox(height: 20.h),
 
@@ -409,19 +408,14 @@ class _IntroScreen4State extends State<IntroScreen4> {
             imagePath: 'assets/images/checkInfo.png',
             isInfo: true,
           ),
-
-
         ],
       ),
     );
   }
 
-  Widget _buildBadgeIcon({
-    required String imagePath,
-    required bool isInfo,
-  }) {
+  Widget _buildBadgeIcon({required String imagePath, required bool isInfo}) {
     return Container(
-child:  Center(
+      child: Center(
         child: Image.asset(
           imagePath,
           width: 38.w,
