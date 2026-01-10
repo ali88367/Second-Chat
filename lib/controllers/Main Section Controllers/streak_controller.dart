@@ -5,6 +5,9 @@ import 'package:second_chat/core/constants/app_colors/app_colors.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
 import 'package:second_chat/core/widgets/custom_switch.dart';
 
+/// Added CellType for Calendar logic
+enum CellType { tick, cross, dot, freeze }
+
 class StreamStreaksController extends GetxController {
   var selectedDays = <String, bool>{
     'Mon': false,
@@ -24,12 +27,32 @@ class StreamStreaksController extends GetxController {
 
   int get selectedCount => selectedMenuNumbers.length;
 
-  List<int> get availableMenuNumbers =>
-      List.generate(7, (i) => i + 1)
-          .where((n) => !selectedMenuNumbers.contains(n))
-          .toList();
+  List<int> get availableMenuNumbers => List.generate(7, (i) => i + 1)
+      .where((n) => !selectedMenuNumbers.contains(n))
+      .toList();
 
   bool get areDaysDisabled => threeTimesWeek.value;
+
+  // --- NEW CALENDAR STATE FOR ALL SCREENS ---
+
+  /// Multi-row state (Screen 1)
+  final calendarRows = <RxList<CellType>>[
+    RxList.of([CellType.tick, CellType.cross, CellType.tick, CellType.tick, CellType.cross, CellType.freeze, CellType.cross]),
+    RxList.of([CellType.cross, CellType.cross, CellType.cross, CellType.tick, CellType.tick, CellType.tick, CellType.cross]),
+    RxList.of(List.generate(7, (_) => CellType.tick)),
+    RxList.of([CellType.tick, CellType.tick, CellType.tick, CellType.dot, CellType.dot, CellType.dot, CellType.dot]),
+    RxList.of(List.generate(7, (_) => CellType.dot)),
+  ];
+
+  /// Single-row state (Screens 2 & 3)
+  final singleRowCells = RxList<CellType>.of([
+    CellType.tick, CellType.cross, CellType.tick, CellType.tick, CellType.tick, CellType.cross, CellType.cross,
+  ]);
+
+  final lastTappedRow = RxnInt();
+  final lastTappedCol = RxnInt();
+
+  // --- EXISTING LOGIC ---
 
   void toggleMenuNumber(int number) {
     if (selectedMenuNumbers.contains(number)) {
@@ -77,5 +100,42 @@ class StreamStreaksController extends GetxController {
     }
 
     selectedDays.refresh();
+  }
+
+  // --- NEW CALENDAR ACTIONS ---
+
+  void toggleCalendarCell(int rowIdx, int colIdx, {bool isSingleRow = false}) {
+    final targetRow = isSingleRow ? singleRowCells : calendarRows[rowIdx];
+    final current = targetRow[colIdx];
+
+    if (current == CellType.cross) {
+      targetRow[colIdx] = CellType.tick;
+      lastTappedRow.value = rowIdx;
+      lastTappedCol.value = colIdx;
+    } else if (current == CellType.tick) {
+      targetRow[colIdx] = CellType.cross;
+      if (lastTappedRow.value == rowIdx && lastTappedCol.value == colIdx) {
+        lastTappedCol.value = null;
+      }
+    }
+  }
+
+  /// Unified Grouping Logic for Highlighting
+  List<List<int>> getTickGroups(List<CellType> row) {
+    final groups = <List<int>>[];
+    int start = -1;
+
+    for (int i = 0; i < row.length; i++) {
+      if (row[i] == CellType.tick) {
+        if (start == -1) start = i;
+      } else {
+        if (start != -1) {
+          groups.add([start, i - 1]);
+          start = -1;
+        }
+      }
+    }
+    if (start != -1) groups.add([start, row.length - 1]);
+    return groups;
   }
 }

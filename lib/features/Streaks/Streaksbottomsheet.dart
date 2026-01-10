@@ -8,7 +8,6 @@ import 'package:second_chat/core/widgets/custom_switch.dart';
 import '../../controllers/Main Section Controllers/streak_controller.dart';
 import 'Freeze_bottomsheet.dart';
 
-
 class StreamStreakSetupBottomSheet extends StatelessWidget {
   const StreamStreakSetupBottomSheet({super.key});
 
@@ -57,7 +56,6 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -76,13 +74,11 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
                       _buildDivider(),
                       SizedBox(height: 24.h),
                       _buildThreeTimesOption(controller),
-                      SizedBox(height: 80.h),
+                      SizedBox(height: 100.h), // Extra space for scrolling
                     ],
                   ),
                 ),
               ),
-
-              /// ✅ NEXT BUTTON (NOW NAVIGATES TO FREEZE PREVIEW)
               Padding(
                 padding: EdgeInsets.all(16.w),
                 child: SizedBox(
@@ -112,73 +108,91 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
             ],
           ),
 
-          /// INTERACTIVE MENU OVERLAY (NOW POSITIONED ON THE LEFT)
+          /// INTERACTIVE MENU OVERLAY (NOW POPS UPWARDS FROM THE BOTTOM BAR)
           Obx(() {
             if (!controller.isSelectingThreeDays.value) {
               return const SizedBox.shrink();
             }
 
-            return Container(
-              color: Colors.black.withOpacity(0.08),
-              child: Positioned(
-                bottom: 140.h,
-                left: 24.w, // Changed from right to left
+            return Positioned.fill(
+              child: GestureDetector(
+                onTap: () => controller.isSelectingThreeDays.value = false,
+                behavior: HitTestBehavior.opaque,
                 child: Container(
-                  width: 96.w,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1C1C1E),
-                    borderRadius: BorderRadius.circular(22.r),
-                    border: Border.all(color: Colors.white.withOpacity(0.12)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  color: Colors.transparent, // Capture taps to close
+                  child: Stack(
                     children: [
-                      ...controller.selectedMenuNumbers.map(
-                            (n) => GestureDetector(
-                          onTap: () => controller.toggleMenuNumber(n),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 6.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.check,
-                                    size: 18.sp, color: Colors.white),
-                                SizedBox(width: 6.w),
-                                Text(
-                                  "$n",
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                      Positioned(
+                        bottom: 145.h, // Positioned right above the "3-times" bar
+                        left: 40.w,   // Aligned with the indicator icon
+                        child: Container(
+                          width: 96.w,
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1C1C1E),
+                            borderRadius: BorderRadius.circular(22.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              )
+                            ],
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.12)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ...controller.selectedMenuNumbers.map(
+                                    (n) => GestureDetector(
+                                  onTap: () => controller.toggleMenuNumber(n),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 6.h),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.check,
+                                            size: 18.sp, color: Colors.white),
+                                        SizedBox(width: 6.w),
+                                        Text(
+                                          "$n",
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (controller.selectedMenuNumbers.isNotEmpty) ...[
-                        SizedBox(height: 12.h),
-                        Container(
-                          height: 1,
-                          width: 40.w,
-                          color: Colors.white.withOpacity(0.15),
-                        ),
-                        SizedBox(height: 12.h),
-                      ],
-                      ...controller.availableMenuNumbers.map(
-                            (n) => GestureDetector(
-                          onTap: () => controller.toggleMenuNumber(n),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 6.h),
-                            child: Text(
-                              "$n",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                color: const Color(0xFF8E8E93),
                               ),
-                            ),
+                              if (controller.selectedMenuNumbers.isNotEmpty) ...[
+                                SizedBox(height: 12.h),
+                                Container(
+                                  height: 1,
+                                  width: 40.w,
+                                  color: Colors.white.withOpacity(0.15),
+                                ),
+                                SizedBox(height: 12.h),
+                              ],
+                              ...controller.availableMenuNumbers.map(
+                                    (n) => GestureDetector(
+                                  onTap: () => controller.toggleMenuNumber(n),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 6.h),
+                                    child: Text(
+                                      "$n",
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        color: const Color(0xFF8E8E93),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -274,7 +288,13 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
     return Obx(() {
       final selected = controller.threeTimesWeek.value;
       return GestureDetector(
-        onTap: () => controller.toggleThreeTimesWeek(!selected),
+        onTap: () {
+          controller.toggleThreeTimesWeek(!selected);
+          // Toggle menu visibility when clicking the row
+          if (!selected) {
+            controller.isSelectingThreeDays.value = true;
+          }
+        },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
           decoration: BoxDecoration(
@@ -286,21 +306,22 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
             children: [
               Row(
                 children: [
-                 Image.asset('assets/images/Pop-up Menu Indicator.png'),
+                  Image.asset('assets/images/Pop-up Menu Indicator.png'),
                   SizedBox(width: 12.w),
                   Text(
                     '3-times a week',
                     style: sfProText400(
                         17.sp,
-                        selected
-                            ? Colors.white
-                            : const Color(0xFF8E8E93)),
+                        selected ? Colors.white : const Color(0xFF8E8E93)),
                   ),
                 ],
               ),
               CustomSwitch(
                 value: selected,
-                onChanged: controller.toggleThreeTimesWeek,
+                onChanged: (val) {
+                  controller.toggleThreeTimesWeek(val);
+                  if(val) controller.isSelectingThreeDays.value = true;
+                },
               ),
             ],
           ),
@@ -309,4 +330,3 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
     });
   }
 }
-
