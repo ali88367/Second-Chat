@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
+
 
 
 class EdgeGlowNotificationPage extends StatefulWidget {
@@ -26,7 +28,7 @@ class _EdgeGlowNotificationPageState extends State<EdgeGlowNotificationPage>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: const Duration(seconds: 4),
     );
   }
 
@@ -39,26 +41,26 @@ class _EdgeGlowNotificationPageState extends State<EdgeGlowNotificationPage>
   List<Color> _platformGlowColors() {
     switch (currentPlatform) {
       case StreamPlatform.twitch:
-        return const [
-          Color(0xFF9B5CFF),
-          Color(0xFFFF4FD8),
-          Color(0xFF00E5FF),
-          Color(0xFF6E7BFF),
-        ];
+  return const [
+    Color(0xFF8F3DDB), // Deep violet (darker than base, good for depth)
+    Color(0xFFC45BFF), // Lighter purple highlight (close to base)
+   
+  ];
+
       case StreamPlatform.kick:
-        return const [
-         Color(0xFF00FF87), // Soft neon green
+       return const [
+  Color(0xFF00FF87), // Soft neon green
   Color(0xFF2BFF00), // Electric green
   Color(0xFF00E6A8), // Teal-green glow
   Color(0xFF7CFF3A), // Apple-style lime
   Color(0xFF00FF5A), // Bright pulse green
-        ];
+];
+
       case StreamPlatform.youtube:
         return const [
           Color(0xFFFF1744),
           Color(0xFFFF5252),
-          Color(0xFFFFD740),
-          Color(0xFFFF0000),
+        
         ];
     }
   }
@@ -201,7 +203,7 @@ class SiriEdgeGlowPainter extends CustomPainter {
     required this.colors,
   });
 
- @override
+  @override
 void paint(Canvas canvas, Size size) {
   // Fixed margin — NO expansion
   const margin = 10.0;
@@ -232,7 +234,7 @@ void paint(Canvas canvas, Size size) {
     transform: GradientRotation(progress * pi * 2),
   );
 
-  // OUTER DIFFUSED GLOW (reduce spread)
+ // OUTER DIFFUSED GLOW (reduce spread)
 final outerPaint = Paint()
   ..style = PaintingStyle.stroke
   ..strokeWidth = 20 * breathing       // smaller than before (was 30)
@@ -254,6 +256,7 @@ final sharpPaint = Paint()
   ..strokeWidth = 2
   ..shader = gradient.createShader(rect)
   ..color = Colors.white.withOpacity(0.35);
+
 
   canvas.drawPath(path, outerPaint);
   canvas.drawPath(path, innerPaint);

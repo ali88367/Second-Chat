@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:second_chat/LiveStreaming.dart';
 import 'package:second_chat/features/intro/intro_screen1.dart';
+import 'package:second_chat/features/main_section/main/HomeScreen2.dart';
+import 'package:second_chat/features/main_section/stream/StreamStreak1.dart';
 import 'controllers/Main Section Controllers/settings_controller.dart';
 import 'core/constants/app_colors/app_colors.dart';
 import 'core/constants/constants.dart';
@@ -172,7 +174,7 @@ class MyApp extends StatelessWidget {
           ),
 
           // Use Get.to(), Get.off(), Get.offAll() with direct widget references for navigation
-          home:  Livestreaming(),
+          home: IntroScreen1(),
 
           // Navigation settings
           defaultTransition: Transition.cupertino,
