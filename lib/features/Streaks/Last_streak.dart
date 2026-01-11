@@ -34,15 +34,24 @@ class StreakFreezeUseBottomSheet extends StatelessWidget {
     final int count = end - start + 1;
     final double cellWidth = totalWidth / days;
 
-    final decoration = count >= 3
-        ? BoxDecoration(
-      gradient: const LinearGradient(colors: [Color(0xFF7EDDE4), Color(0xFFC5F3F1)]),
-      borderRadius: BorderRadius.circular(22.r),
-    )
-        : BoxDecoration(
-      color: const Color(0xFF3C3C43).withOpacity(0.6),
-      borderRadius: BorderRadius.circular(22.r),
-    );
+    Decoration decoration;
+    if (count >= 3) {
+      decoration = BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFF7EDDE4), Color(0xFFC5F3F1)]),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    } else if (count == 1) {
+      // Perfect circle for single selection
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        shape: BoxShape.circle,
+      );
+    } else {
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    }
 
     return Positioned(
       left: start * cellWidth,
@@ -50,7 +59,8 @@ class StreakFreezeUseBottomSheet extends StatelessWidget {
       top: 0,
       bottom: 0,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        // Remove horizontal margin for circles to keep them centered
+        margin: count == 1 ? EdgeInsets.zero : EdgeInsets.symmetric(horizontal: 2.w),
         decoration: decoration,
       ),
     );
@@ -90,7 +100,83 @@ class StreakFreezeUseBottomSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Image.asset('assets/images/Content(4).png', width: 560.w, height: 462.w, fit: BoxFit.cover),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // 1. Adjusted Glow Effect
+                          Container(
+                            width: 300.w,  // Narrower than height to match the flame's vertical profile
+                            height: 240.h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.all(Radius.elliptical(70.w, 110.h)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF7EDDE4).withOpacity(0.35), // Soft pale yellow
+                                  blurRadius: 200, // Spread the glow out
+                                  spreadRadius: 10,
+                                ),
+                                BoxShadow(
+                                  color: const Color(0xFFC5F3F1).withOpacity(0.2), // Inner warm glow
+                                  blurRadius: 40,
+                                  spreadRadius: -10,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // 2. The Flame Image
+                          Image.asset(
+                            'assets/images/hello.png',
+                            // Ensure fit is contain to keep original proportions
+                          ),
+
+                          // 3. The Number Image
+                          Positioned(
+                            bottom: 10.h,
+                            child: Image.asset(
+                              'assets/images/Streak number.png',
+                            ),
+                          ),
+                        ],
+                      ),                      Text("Go ahead, freeze it. Commitment is overrated anyway.",
+                        style: sfProDisplay600(18.sp, Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 12.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF32393D),
+                          borderRadius: BorderRadius.circular(40.r),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset("assets/images/checkmark.circle.fill.png"),
+                            SizedBox(width: 8.w),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: '3 ',
+                                      style: sfProDisplay400(15.sp, Colors.white)
+                                  ),
+                                  TextSpan(
+                                      text: 'available',
+                                      style: sfProDisplay400(15.sp, const Color(0xFFB0B3B8))
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
                       SizedBox(height: 20.h),
 
                       // --- CALENDAR CARD ---
@@ -104,7 +190,6 @@ class StreakFreezeUseBottomSheet extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Days Header Row
                             Row(
                               children: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'].map((day) {
                                 return Expanded(
@@ -125,7 +210,6 @@ class StreakFreezeUseBottomSheet extends StatelessWidget {
                             ),
                             SizedBox(height: 16.h),
 
-                            // Interactive Icons Row
                             LayoutBuilder(
                                 builder: (context, constraints) {
                                   final totalWidth = constraints.maxWidth;

@@ -41,15 +41,25 @@ class StreakFreezeSingleRowPreviewBottomSheet extends StatelessWidget {
     final int count = end - start + 1;
     final double cellWidth = totalWidth / days;
 
-    final decoration = count >= 3
-        ? BoxDecoration(
-      gradient: const LinearGradient(colors: [Color(0xFFF2B269), Color(0xFFFFE6A7)]),
-      borderRadius: BorderRadius.circular(22.r),
-    )
-        : BoxDecoration(
-      color: const Color(0xFF3C3C43).withOpacity(0.6),
-      borderRadius: BorderRadius.circular(22.r),
-    );
+    // Logic for perfect circle vs rounded bar
+    Decoration decoration;
+    if (count >= 3) {
+      decoration = BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFFF2B269), Color(0xFFFFE6A7)]),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    } else if (count == 1) {
+      // Perfect circle for single selection
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        shape: BoxShape.circle,
+      );
+    } else {
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    }
 
     return Positioned(
       left: start * cellWidth,
@@ -57,7 +67,7 @@ class StreakFreezeSingleRowPreviewBottomSheet extends StatelessWidget {
       top: 0,
       bottom: 0,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        margin: count == 1 ? EdgeInsets.zero : EdgeInsets.symmetric(horizontal: 2.w),
         decoration: decoration,
       ),
     );
@@ -152,7 +162,55 @@ class StreakFreezeSingleRowPreviewBottomSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                Image.asset('assets/images/Content(3).png', width: 560.w, height: 462.w, fit: BoxFit.cover),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // 1. Adjusted Glow Effect
+                    Container(
+                      width: 200.w,  // Narrower than height to match the flame's vertical profile
+                      height: 240.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.elliptical(70.w, 110.h)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFFF9C4).withOpacity(0.35), // Soft pale yellow
+                            blurRadius: 200, // Spread the glow out
+                            spreadRadius: 10,
+                          ),
+                          BoxShadow(
+                            color: const Color(0xFFFDEBB2).withOpacity(0.2), // Inner warm glow
+                            blurRadius: 40,
+                            spreadRadius: -10,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 2. The Flame Image
+                    Image.asset(
+                      'assets/images/foire.png',
+                      // Ensure fit is contain to keep original proportions
+                      fit: BoxFit.contain,
+                    ),
+
+                    // 3. The Number Image
+                    Positioned(
+                      bottom: 10.h,
+                      child: Image.asset(
+                        'assets/images/Streak number.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+                Text("Day Streak",
+                  style: sfProDisplay600(34.sp, Colors.white),
+                ),
+                Text("You’ve never been hotter, keep the streak burning!",
+                  style: sfProDisplay400(15.sp, const Color(0xFFB0B3B8)),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: 20.h),
 
                 // --- CALENDAR CARD ---

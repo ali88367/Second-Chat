@@ -52,15 +52,24 @@ class StreakFreezePreviewBottomSheet extends StatelessWidget {
     final int count = end - start + 1;
     final double cellWidth = totalWidth / days;
 
-    final decoration = count >= 3
-        ? BoxDecoration(
-      gradient: const LinearGradient(colors: [Color(0xFFF2B269), Color(0xFFFFE6A7)]),
-      borderRadius: BorderRadius.circular(22.r),
-    )
-        : BoxDecoration(
-      color: const Color(0xFF3C3C43).withOpacity(0.6),
-      borderRadius: BorderRadius.circular(22.r),
-    );
+    Decoration decoration;
+    if (count >= 3) {
+      decoration = BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFFF2B269), Color(0xFFFFE6A7)]),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    } else if (count == 1) {
+      // Perfect circle for single selection
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        shape: BoxShape.circle,
+      );
+    } else {
+      decoration = BoxDecoration(
+        color: const Color(0xFF3C3C43).withOpacity(0.6),
+        borderRadius: BorderRadius.circular(22.r),
+      );
+    }
 
     return Positioned(
       left: start * cellWidth,
@@ -68,7 +77,8 @@ class StreakFreezePreviewBottomSheet extends StatelessWidget {
       top: 0,
       bottom: 0,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        // Remove horizontal margin for circles to keep them centered
+        margin: count == 1 ? EdgeInsets.zero : EdgeInsets.symmetric(horizontal: 2.w),
         decoration: decoration,
       ),
     );
@@ -146,7 +156,59 @@ class StreakFreezePreviewBottomSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Image.asset('assets/images/Content(2).png', width: 560.w, height: 352.w),
+                    SizedBox(height: 20.h,),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0XFF84DEE4).withOpacity(0.2),
+                            blurRadius: 60,
+                            spreadRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/a1.png',
+                      ),
+                    ),
+                    SizedBox(height: 6.h,),
+                    Text("Streak in danger?\nHit the Freeze button!",
+                      textAlign: TextAlign.center,
+                      style: sfProDisplay600(22.sp, Colors.white),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF32393D),
+                        borderRadius: BorderRadius.circular(40.r),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset("assets/images/checkmark.circle.fill.png"),
+                          SizedBox(width: 8.w),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: '3 ',
+                                    style: sfProDisplay400(15.sp, Colors.white)
+                                ),
+                                TextSpan(
+                                    text: 'freezes per month',
+                                    style: sfProDisplay400(15.sp, const Color(0xFFB0B3B8))
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 20.h),
 
                     // --- CALENDAR CARD ---

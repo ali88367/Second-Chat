@@ -62,11 +62,28 @@ class StreamStreakSetupBottomSheet extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 20.h),
-                      Image.asset(
-                        'assets/images/Content.png',
-                        width: 600.w,
-                        height: 302.h,
-                        fit: BoxFit.contain,
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0XFFFFE6A7).withOpacity(0.2),
+                              blurRadius: 60,
+                              spreadRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          'assets/images/abc.png',
+                        ),
+                      ),
+                      SizedBox(height: 12.h,),
+                      Text("Build a long-term habit",
+                      style: sfProDisplay600(22.sp, Colors.white),),
+                      SizedBox(height: 4.h,),
+                      Text("Settings a streak goals  helps you stay consistent",
+                      style: sfProDisplay400(15.sp, Color(0xFFB0B3B8)),
+                      textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 24.h),
                       _buildDayToggles(controller),
