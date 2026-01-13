@@ -117,7 +117,7 @@ class InviteBottomSheet extends StatelessWidget {
                     child: Text(
                       "Share invite codes with your friends and you will receive:",
                       textAlign: TextAlign.center,
-                      style: sfProDisplay400(15.sp, const Color(0XFFEBEBF599)),
+                      style: sfProDisplay400(15.sp, const Color(0xFFB0B3B8)),
                     ),
                   ),
                   SizedBox(height: 16.h),
@@ -127,7 +127,7 @@ class InviteBottomSheet extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFF2B269), Color(0xFFFFE6A7)],
+                        colors: [Color(0xFFFFE6A7),Color(0xFFF2B269),],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
@@ -143,11 +143,7 @@ class InviteBottomSheet extends StatelessWidget {
                     ),
                     child: Text(
                       "1 month free premium",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: sfProDisplay400(15.sp, Colors.white)
                     ),
                   ),
                   SizedBox(height: 20.h),

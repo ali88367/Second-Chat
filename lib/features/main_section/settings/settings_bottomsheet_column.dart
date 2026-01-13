@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:second_chat/controllers/Main%20Section%20Controllers/settings_controller.dart';
 import 'package:second_chat/core/constants/app_images/app_images.dart';
 import 'package:second_chat/core/themes/textstyles.dart';
+import 'package:second_chat/features/main_section/settings/Led_settings.dart';
 import 'package:second_chat/features/main_section/settings/settings_components/connect_platform_setting.dart';
 import 'package:second_chat/features/main_section/settings/settings_components/platform_color_settings.dart';
 import '../../../core/constants/app_colors/app_colors.dart';
@@ -33,7 +34,6 @@ class SettingsBottomsheetColumn extends StatelessWidget {
         "prefixImageAsset": linking_icon,
         "title": "Connect Other Platforms",
         "isForward": true,
-        // Special flag to trigger bottom sheet instead of page navigation
         "openAsBottomSheet": "connect",
       },
     ],
@@ -79,7 +79,6 @@ class SettingsBottomsheetColumn extends StatelessWidget {
         "prefixImageAsset": color_brush_icon,
         "title": "Platform Colour",
         "isForward": true,
-        // Special flag to trigger bottom sheet
         "openAsBottomSheet": "color",
       },
     ],
@@ -234,7 +233,7 @@ class SettingsBottomsheetColumn extends StatelessWidget {
     final bool isForward = tile["isForward"] ?? false;
     final bool isLocked = tile["isLocked"] ?? false;
     final String? switchKey = tile["switchKey"];
-    final String? openAsBottomSheet = tile["openAsBottomSheet"]; // "connect" or "color"
+    final String? openAsBottomSheet = tile["openAsBottomSheet"];
 
     RxBool? switchObs;
     if (isSwitch && switchKey != null) {
@@ -277,48 +276,46 @@ class SettingsBottomsheetColumn extends StatelessWidget {
             onTap: isLocked
                 ? null
                 : () {
-              // Special handling for bottom sheet tiles
-              if (openAsBottomSheet != null) {
-                Get.back(); // Close current settings sheet
-                if (openAsBottomSheet == "connect") {
-                      Get.bottomSheet(
-                          isDismissible: true,
-                          isScrollControlled: true,
-                          enableDrag: true,
-                          Container(
-                            height: Get.height * .9,
-                            decoration: BoxDecoration(
-                              color: bottomSheetGrey,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(18.r),
-                                topLeft: Radius.circular(18.r),
-                              ),
-                            ),
-                            child: ConnectPlatformSetting()
-                          )
+              if (tile["title"] == "LED Notifications" || openAsBottomSheet != null) {
+                if (openAsBottomSheet != null) Get.back();
 
-                  );
-                } else if (openAsBottomSheet == "color") {
-                  Get.bottomSheet(
-                      isDismissible: true,
-                      isScrollControlled: true,
-                      enableDrag: true,
-                      Container(
-                        height: Get.height * .9,
+                Get.bottomSheet(
+                  isDismissible: true,
+                  isScrollControlled: true,
+                  enableDrag: true,
+                  backgroundColor: Colors.transparent, // REQUIRED FOR FLOATING GAP
+                  enterBottomSheetDuration: const Duration(milliseconds: 300),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 12.w,
+                        right: 12.w,
+                        bottom: 15.h // Space at the very bottom
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        // Updated dimensions
+                        width: 361.w,
+                        height: 386.h,
                         decoration: BoxDecoration(
-                          color: bottomSheetGrey,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(18.r),
-                            topLeft: Radius.circular(18.r),
-                          ),
+                          color: const Color(0xFF2C2C2E),
+                          borderRadius: BorderRadius.circular(36.r), // Rounds bottom corners too
                         ),
-                        child: PlatformColorSettings(),
-                      ));
-                }
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(36.r),
+                          child: tile["title"] == "LED Notifications"
+                              ? const LedSettingsBottomSheet()
+                              : (openAsBottomSheet == "connect"
+                              ? ConnectPlatformSetting()
+                              : PlatformColorSettings()),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
                 return;
               }
 
-              // Normal navigation
               if (isForward && tile["nextPage"] != null) {
                 Get.toNamed(tile["nextPage"]!);
               } else if (isSwitch && switchObs != null) {
@@ -332,7 +329,6 @@ class SettingsBottomsheetColumn extends StatelessWidget {
                   width: 24.w,
                   height: 24.h,
                   color: beige,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.error, color: Colors.red),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
@@ -344,11 +340,6 @@ class SettingsBottomsheetColumn extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (tile["suffixImageAsset1"] != null)
-                      Padding(
-                        padding: EdgeInsets.only(right: 6.w),
-                        child: Image.asset(tile["suffixImageAsset1"], height: 20.h),
-                      ),
                     if (tile["suffixText"] != null)
                       Padding(
                         padding: EdgeInsets.only(right: 8.w),
@@ -382,31 +373,13 @@ class SettingsBottomsheetColumn extends StatelessWidget {
             ),
           ),
         ),
-        if (isLocked)
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: allTiles.indexOf(tile) == 0
-                    ? BorderRadius.vertical(top: Radius.circular(16.r))
-                    : allTiles.indexOf(tile) == allTiles.length - 1
-                    ? BorderRadius.vertical(bottom: Radius.circular(16.r))
-                    : null,
-              ),
-            ),
-          ),
       ],
     );
   }
 }
 
-
-// Your existing FreePlanWidget and ChatPlatformTabs remain unchanged below...
-// (I've kept them exactly as you had them)
-
 class FreePlanWidget extends StatelessWidget {
   const FreePlanWidget({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -445,7 +418,6 @@ class FreePlanWidget extends StatelessWidget {
 
 class ChatPlatformTabs extends StatefulWidget {
   const ChatPlatformTabs({super.key});
-
   @override
   State<ChatPlatformTabs> createState() => _ChatPlatformTabsState();
 }
@@ -456,10 +428,6 @@ class _ChatPlatformTabsState extends State<ChatPlatformTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final Color twitchPurple = const Color(0xFF9146FF);
-    final Color kickGreen = const Color(0xFF53FC18);
-    final Color youtubeRed = Colors.red;
-
     return Container(
       height: 36.h,
       width: double.infinity,
@@ -469,11 +437,9 @@ class _ChatPlatformTabsState extends State<ChatPlatformTabs> {
       ),
       padding: EdgeInsets.all(3.w),
       child: Row(
-        children: tabs.asMap().entries.expand<Widget>((entry) {
-          final String tab = entry.value;
+        children: tabs.map((tab) {
           final bool isSelected = selected == tab;
-
-          Widget tabWidget = Expanded(
+          return Expanded(
             child: GestureDetector(
               onTap: () => setState(() => selected = tab),
               child: Container(
@@ -485,15 +451,7 @@ class _ChatPlatformTabsState extends State<ChatPlatformTabs> {
                 child: Text(
                   tab,
                   style: TextStyle(
-                    color: tab == "Twitch"
-                        ? twitchPurple
-                        : tab == "Kick"
-                        ? kickGreen
-                        : tab == "YouTube"
-                        ? youtubeRed
-                        : isSelected
-                        ? Colors.white
-                        : Colors.grey,
+                    color: isSelected ? Colors.white : Colors.grey,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
                   ),
@@ -501,24 +459,6 @@ class _ChatPlatformTabsState extends State<ChatPlatformTabs> {
               ),
             ),
           );
-
-          if (tab == "Kick") {
-            return <Widget>[
-              Container(
-                width: 1.w,
-                color: Colors.grey.withOpacity(0.4),
-                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
-              ),
-              tabWidget,
-              Container(
-                width: 1.w,
-                color: Colors.grey.withOpacity(0.4),
-                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
-              ),
-            ];
-          }
-
-          return <Widget>[tabWidget];
         }).toList(),
       ),
     );

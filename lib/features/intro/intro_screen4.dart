@@ -34,22 +34,7 @@ class IntroScreen4 extends StatefulWidget {
 }
 
 class _IntroScreen4State extends State<IntroScreen4> {
-  bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
-
-  void _startTrial() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    await Future.delayed(const Duration(seconds: 3));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    print('Trial started');
-  }
 
   @override
   void dispose() {
@@ -73,7 +58,7 @@ class _IntroScreen4State extends State<IntroScreen4> {
           ),
           Image.asset('assets/images/topbarshade.png', fit: BoxFit.cover),
 
-          // Bottom shade (flipped)
+          // Content
           SafeArea(
             child: Column(
               children: [
@@ -119,28 +104,22 @@ class _IntroScreen4State extends State<IntroScreen4> {
                           ),
                           TextSpan(
                             text: 'Premium',
-                            style:
-                                sfProDisplay600(
-                                  34.sp,
-                                  Colors
-                                      .white, // base color won't matter, overridden by foreground
-                                ).copyWith(
-                                  foreground: Paint()
-                                    ..shader = LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Color(0xFFF2B269), // yellow-orange
-                                        Color(0xFFF17A7A), // fully opaque red
-                                        Color(0xFFFFE6A7), // light yellow
-                                      ],
-                                      stops: [0.2, 0.5, 0.8],
-                                      // shift stops to give more space to red
-                                      transform: GradientRotation(
-                                        135.5 * 3.1415927 / 180,
-                                      ),
-                                    ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
-                                ),
+                            style: sfProDisplay600(34.sp, Colors.white).copyWith(
+                              foreground: Paint()
+                                ..shader = LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xFFF2B269),
+                                    Color(0xFFF17A7A),
+                                    Color(0xFFFFE6A7),
+                                  ],
+                                  stops: [0.2, 0.5, 0.8],
+                                  transform: GradientRotation(
+                                    135.5 * 3.1415927 / 180,
+                                  ),
+                                ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
+                            ),
                           ),
                         ],
                       ),
@@ -150,54 +129,52 @@ class _IntroScreen4State extends State<IntroScreen4> {
 
                 SizedBox(height: 30.h),
 
-                // Main Content: 70% Features + 30% Badge
+                // Main Content
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 70% - Features List
+                      // 70% - Features List with Sticky Header
                       Expanded(
                         flex: 8,
-                        child: SingleChildScrollView(
-                          controller: _scrollController,
+                        child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: Column(
+                          child: Stack(
                             children: [
-                              _buildGlassButton(),
-                              SizedBox(height: 24.h),
-                              _buildFeatureRow(
-                                'Multi-Platform Chat',
-                                true,
-                                false,
+                              // 1. The Scrollable Content
+                              Positioned.fill(
+                                child: SingleChildScrollView(
+                                  controller: _scrollController,
+                                  // Padding at top so first item isn't hidden by header
+                                  padding: EdgeInsets.only(top: 82.h),
+                                  child: Column(
+                                    children: [
+                                      _buildFeatureRow('Multi-Platform Chat', true, false),
+                                      _buildFeatureRow('Multi-Stream Monitor', false, true),
+                                      _buildFeatureRow('Activity Feed', true, false),
+                                      _buildFeatureRow('Title/Category Manage', false, true),
+                                      _buildFeatureRow('Edge LED Notification', false, true),
+                                      _buildFeatureRow('Custom Notification', false, true),
+                                      _buildFeatureRow('Analytics', false, true),
+                                      _buildFeatureRow('Animated Elements', false, true),
+                                      _buildFeatureRow('Stream Streak', true, false),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              _buildFeatureRow(
-                                'Multi-Stream Monitor',
-                                false,
-                                true,
+                              // 2. The Sticky Glass Header (Pinned on top)
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                child: _buildGlassButton(),
                               ),
-                              _buildFeatureRow('Activity Feed', true, false),
-                              _buildFeatureRow(
-                                'Title/Category Manage',
-                                false,
-                                true,
-                              ),
-                              _buildFeatureRow(
-                                'Edge LED Notification',
-                                false,
-                                true,
-                              ),
-                              _buildFeatureRow(
-                                'Custom Notification',
-                                false,
-                                true,
-                              ),
-                              // SizedBox(height: 100.h), // extra space for button
                             ],
                           ),
                         ),
                       ),
 
-                      // 30% - Premium Badge (vertically centered, follows scroll)
+                      // 30% - Premium Badge
                       Expanded(
                         flex: 2,
                         child: AnimatedBuilder(
@@ -214,10 +191,8 @@ class _IntroScreen4State extends State<IntroScreen4> {
 
                 // Start Trial Button
                 Obx(
-                  () => GestureDetector(
-                    onTap: controller.isLoading.value
-                        ? null
-                        : controller.startTrial,
+                      () => GestureDetector(
+                    onTap: controller.isLoading.value ? null : controller.startTrial,
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 16.w),
                       width: double.infinity,
@@ -240,19 +215,17 @@ class _IntroScreen4State extends State<IntroScreen4> {
                       child: Center(
                         child: controller.isLoading.value
                             ? SizedBox(
-                                width: 24.w,
-                                height: 24.w,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2.5,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
-                                ),
-                              )
+                          width: 24.w,
+                          height: 24.w,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
                             : Text(
-                                'Start My 14 Day Free Trial',
-                                style: sfProText500(17.sp, Colors.white),
-                              ),
+                          'Start My 14 Day Free Trial',
+                          style: sfProText500(17.sp, Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -269,19 +242,17 @@ class _IntroScreen4State extends State<IntroScreen4> {
 
   Widget _buildGlassButton() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(37), // Rounded corners
+      borderRadius: BorderRadius.circular(37),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Glass blur effect
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          //  width: 250.w, // Fixed width
-          height: 58.h, // Fixed height
+          height: 58.h,
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(48, 48, 48, 0.5), // rgba(48,48,48,0.5)
+            color: const Color.fromRGBO(48, 48, 48, 0.5),
             borderRadius: BorderRadius.circular(37),
             border: Border.all(
               color: Colors.white.withOpacity(0.2),
-              // subtle border for glass effect
               width: 1.5,
             ),
           ),
@@ -323,9 +294,7 @@ class _IntroScreen4State extends State<IntroScreen4> {
                     ),
                     child: Icon(
                       isFree ? Icons.check : Icons.close,
-                      color: isFree
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                      color: isFree ? Colors.white : Colors.white.withOpacity(0.5),
                       size: 16.sp,
                     ),
                   ),
@@ -334,21 +303,21 @@ class _IntroScreen4State extends State<IntroScreen4> {
             ],
           ),
         ),
-        SizedBox(height: 12.h), // Vertical spacing
+        SizedBox(height: 12.h),
         Divider(
-          color: Colors.grey.withOpacity(0.3), // Grey divider
+          color: Colors.grey.withOpacity(0.3),
           thickness: 1,
-          indent: 17.w, // Align with left margin
-          endIndent: 17.w, // Optional: align right
+          indent: 17.w,
+          endIndent: 17.w,
         ),
-        SizedBox(height: 12.h), // Space after divider
+        SizedBox(height: 12.h),
       ],
     );
   }
 
   Widget _buildPremiumBadge() {
     return Container(
-      width: 40.w, // comfortable width in 30% space
+      width: 40.w,
       padding: EdgeInsets.symmetric(vertical: 16.h),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -368,46 +337,23 @@ class _IntroScreen4State extends State<IntroScreen4> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Crown
           SizedBox(
             height: 32.h,
             width: 32.w,
             child: Image.asset('assets/images/crown.png'),
           ),
-
           SizedBox(height: 20.h),
-
-          // Icons
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkPlus.png',
-            isInfo: false,
-          ),
+          _buildBadgeIcon(imagePath: 'assets/images/checkPlus.png', isInfo: false),
           SizedBox(height: 28.h),
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkInfo.png',
-            isInfo: true,
-          ),
-
+          _buildBadgeIcon(imagePath: 'assets/images/checkInfo.png', isInfo: true),
           SizedBox(height: 28.h),
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkPlus.png',
-            isInfo: false,
-          ),
+          _buildBadgeIcon(imagePath: 'assets/images/checkPlus.png', isInfo: false),
           SizedBox(height: 28.h),
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkInfo.png',
-            isInfo: true,
-          ),
+          _buildBadgeIcon(imagePath: 'assets/images/checkInfo.png', isInfo: true),
           SizedBox(height: 28.h),
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkInfo.png',
-            isInfo: true,
-          ),
+          _buildBadgeIcon(imagePath: 'assets/images/checkInfo.png', isInfo: true),
           SizedBox(height: 28.h),
-          _buildBadgeIcon(
-            imagePath: 'assets/images/checkInfo.png',
-            isInfo: true,
-          ),
+          _buildBadgeIcon(imagePath: 'assets/images/checkInfo.png', isInfo: true),
         ],
       ),
     );

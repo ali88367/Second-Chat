@@ -61,9 +61,9 @@ class CustomSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Colors matching the image: light brown/golden when active, grey when inactive
-    final Color finalActiveColor = activeColor ?? const Color(0xFFD4A574); // Light brown/golden
-    final Color finalInactiveColor = inactiveColor ?? greyScale300;
+    // Colors updated to requested hex codes
+    final Color finalActiveColor = activeColor ?? const Color(0xFFE6C571);
+    final Color finalInactiveColor = inactiveColor ?? const Color(0x4D3C3C43);
     final Color finalThumbColor = thumbColor ?? Colors.white;
     final double finalSpacing = spacing ?? 12.w;
 
@@ -78,9 +78,9 @@ class CustomSwitch extends StatelessWidget {
     final SwitchThemeData switchTheme = SwitchThemeData(
       thumbColor: WidgetStateProperty.all(Colors.transparent), // Make transparent to overlay custom thumb
       trackColor: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
+            (Set<WidgetState> states) {
           if (states.contains(WidgetState.disabled)) {
-            return greyScale300.withOpacity(0.5);
+            return finalInactiveColor.withOpacity(0.5);
           }
           if (states.contains(WidgetState.selected)) {
             return finalActiveColor;
@@ -89,7 +89,7 @@ class CustomSwitch extends StatelessWidget {
         },
       ),
       overlayColor: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
+            (Set<WidgetState> states) {
           if (states.contains(WidgetState.pressed)) {
             return finalActiveColor.withOpacity(0.2);
           }
