@@ -68,6 +68,29 @@ flutter:
     - assets/icons/
     - assets/images/
 
+  fonts:
+    - family: SFProDisplay
+      fonts:
+        - asset: assets/fonts/SFProDisplay-Regular.OTF
+          weight: 400
+        - asset: assets/fonts/SFProDisplay-Medium.OTF
+          weight: 500
+        - asset: assets/fonts/SFProDisplay-Semibold.OTF
+          weight: 600
+        - asset: assets/fonts/SFProDisplay-Bold.OTF
+          weight: 700
+
+    - family: SFProText
+      fonts:
+        - asset: assets/fonts/SFProDisplay-Regular.OTF
+          weight: 400
+        - asset: assets/fonts/SFProDisplay-Medium.OTF
+          weight: 500
+        - asset: assets/fonts/SFProDisplay-Semibold.OTF
+          weight: 600
+        - asset: assets/fonts/SFProDisplay-Bold.OTF
+          weight: 700
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
